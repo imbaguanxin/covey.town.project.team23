@@ -19,6 +19,7 @@ export type CoveyTownInfo = {
   maximumOccupancy: number;
 };
 
+
 export default class TownsServiceClient {
   private _axios: AxiosInstance;
 
@@ -48,4 +49,65 @@ export default class TownsServiceClient {
   }
 
   // TODO: making axios requests
+  async createUser(requestData: CreateUserBodyRequest):Promise<CreateUserBodyResponse>{
+    const responseWrapper= await this._axios.post<ResponseEnvelope<CreateUserBodyResponse>>('/user', requestData);
+    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+  }
+
+  async listUsers():Promise<ListUserBodyResponse>{
+    const responseWrapper= await this._axios.get<ResponseEnvelope<ListUserBodyResponse>>('/user');
+    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+  }
+
+  async getInvitationIDOfTown(requestData: GetInvitationIDBodyRequest):Promise<GetInvitationIDBodyResponse>{
+    const responseWrapper= await this._axios.get<ResponseEnvelope<GetInvitationIDBodyResponse>>(`/invitation/${requestData.townID}`);
+    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+  }
+
+  async inviteUserInSystem(requestData: InviteUserInSystemBodyRequest):Promise<InviteUserInSystemBodyResponse>{
+    const responseWrapper= await this._axios.post<ResponseEnvelope<InviteUserInSystemBodyResponse>>('/invitation', requestData);
+    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+  }
+
+  async joinUsingUrl(requestData: JoinInvitationBodyRequest):Promise<JoinInvitationBodyResponse>{
+    const responseWrapper= await this._axios.get<ResponseEnvelope<JoinInvitationBodyResponse>>(`/joinInvitation/${requestData.invitationID}`);
+    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+  }
+
 }
+export interface CreateUserBodyRequest{
+  username: string;
+}
+export interface CreateUserBodyResponse{
+  username: string;
+  userID:string;
+  userToken:string;
+}
+export interface ListUserBodyResponse{
+  users: {username: string; userID: string}[];
+}
+
+export interface GetInvitationIDBodyRequest{
+  townID:string;
+}
+export interface GetInvitationIDBodyResponse{
+  invitationID:string;
+}
+
+export interface InviteUserInSystemBodyRequest{
+  coveyTownID: string;
+  invitedUserID: string;
+}
+export interface InviteUserInSystemBodyResponse{
+  invitationSent:boolean;
+}
+export interface JoinInvitationBodyRequest{
+  invitationID:string;
+}
+export interface JoinInvitationBodyResponse{
+  conveyTownID: string;
+  friendlyName: string;
+}
+
+
+
