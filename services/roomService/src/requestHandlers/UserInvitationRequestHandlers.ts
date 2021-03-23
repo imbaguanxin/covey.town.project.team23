@@ -81,7 +81,7 @@ export async function inviteUserInSystemHandler(
   requestData: InviteUserInSystemRequest,
 ): Promise<ResponseEnvelope<InviteUserInSystemResponse>> {
   const userController = CoveyUserController.getInstance();
-  const result = userController.inviteUser(requestData.userID, requestData.coveyTownID);
+  const result = userController.inviteUser(requestData.invitedUserID, requestData.coveyTownID);
   return {
     isOK: true,
     response: {
