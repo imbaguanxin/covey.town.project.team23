@@ -4,12 +4,14 @@ import * as http from 'http';
 import { AddressInfo } from 'net';
 import CoveyTownsStore from './lib/CoveyTownsStore';
 import addTownRoutes from './router/towns';
+import addUserInvitationRoutes from './router/userInvitations';
 
 const app = Express();
 app.use(CORS());
 const server = http.createServer(app);
 
 addTownRoutes(server, app);
+addUserInvitationRoutes(server, app);
 
 server.listen(process.env.PORT || 8081, () => {
   const address = server.address() as AddressInfo;
