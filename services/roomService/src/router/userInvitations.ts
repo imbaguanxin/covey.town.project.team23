@@ -81,7 +81,7 @@ export default function addUserInvitationRoutes(http: Server, app: Express): io.
   app.post('/invitation', BodyParser.json(), async (req, res) => {
     try {
       const result = await inviteUserInSystemHandler({
-        userID: req.params.invitedUserID,
+        invitedUserID: req.params.invitedUserID,
         coveyTownID: req.params.conveyTownID,
       });
       res.status(StatusCodes.OK).json(result);

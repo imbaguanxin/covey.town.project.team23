@@ -116,7 +116,7 @@ export interface UserCreateResponse {
 }
 
 export interface InviteUserInSystemRequest {
-  userID: string;
+  invitedUserID: string;
   coveyTownID: string;
 }
 
