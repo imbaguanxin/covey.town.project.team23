@@ -6,7 +6,7 @@ _POST_ **/user**
 
 ```
 body: {username: string}
-return: {username: string, userID: string}
+return: {username: string, userID: string, userToken: string}
 ```
 
 ### list users:
@@ -14,10 +14,10 @@ return: {username: string, userID: string}
 _GET_ **/user**
 
 ```
-return: {userlist: {username: string, userID: string}[]}
+return: {users: {username: string, userID: string}[]}
 ```
 
-### invite link
+### get invitation id of a town
 
 _GET_ **/invitation/:townID**
 
@@ -25,7 +25,7 @@ _GET_ **/invitation/:townID**
 return: {invitationID: string}
 ```
 
-### invite a user
+### invite a user in system
 
 _POST_ **/invitation**
 
@@ -34,7 +34,7 @@ body: {
     conveyTownID: string,
     invitedUserID: string
 }
-return {?}
+return {invitationSent: boolean}
 ```
 
 ### join using url
