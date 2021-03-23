@@ -1,12 +1,37 @@
 import { customAlphabet, nanoid } from 'nanoid';
+import { Socket } from 'socket.io';
 import { UserLocation } from '../CoveyTypes';
 import CoveyTownListener from '../types/CoveyTownListener';
 import Player from '../types/Player';
 import PlayerSession from '../types/PlayerSession';
-import TwilioVideo from './TwilioVideo';
 import IVideoClient from './IVideoClient';
+import TwilioVideo from './TwilioVideo';
 
 const friendlyNanoID = customAlphabet('1234567890ABCDEF', 8);
+
+/**
+ * An adapter between CoveyTownController's event interface (CoveyTownListener)
+ * and the low-level network communication protocol
+ *
+ * @param socket the Socket object that we will use to communicate with the player
+ */
+function townSocketAdapter(socket: Socket): CoveyTownListener {
+  return {
+    onPlayerMoved(movedPlayer: Player) {
+      socket.emit('playerMoved', movedPlayer);
+    },
+    onPlayerDisconnected(removedPlayer: Player) {
+      socket.emit('playerDisconnect', removedPlayer);
+    },
+    onPlayerJoined(newPlayer: Player) {
+      socket.emit('newPlayer', newPlayer);
+    },
+    onTownDestroyed() {
+      socket.emit('townClosing');
+      socket.disconnect(true);
+    },
+  };
+}
 
 /**
  * The CoveyTownController implements the logic for each town: managing the various events that
@@ -48,6 +73,10 @@ export default class CoveyTownController {
     return this._coveyTownID;
   }
 
+  get invitationID(): string {
+    return this._invitationID;
+  }
+
   /** The list of players currently in the town * */
   private _players: Player[] = [];
 
@@ -70,10 +99,13 @@ export default class CoveyTownController {
 
   private _capacity: number;
 
+  private readonly _invitationID: string;
+
   constructor(friendlyName: string, isPubliclyListed: boolean) {
-    this._coveyTownID = (process.env.DEMO_TOWN_ID === friendlyName ? friendlyName : friendlyNanoID());
+    this._coveyTownID = process.env.DEMO_TOWN_ID === friendlyName ? friendlyName : friendlyNanoID();
     this._capacity = 50;
     this._townUpdatePassword = nanoid(24);
+    this._invitationID = nanoid();
     this._isPubliclyListed = isPubliclyListed;
     this._friendlyName = friendlyName;
   }
@@ -91,10 +123,13 @@ export default class CoveyTownController {
     this._players.push(newPlayer);
 
     // Create a video token for this user to join this town
-    theSession.videoToken = await this._videoClient.getTokenForTown(this._coveyTownID, newPlayer.id);
+    theSession.videoToken = await this._videoClient.getTokenForTown(
+      this._coveyTownID,
+      newPlayer.id,
+    );
 
     // Notify other players that this player has joined
-    this._listeners.forEach((listener) => listener.onPlayerJoined(newPlayer));
+    this._listeners.forEach(listener => listener.onPlayerJoined(newPlayer));
 
     return theSession;
   }
@@ -105,9 +140,9 @@ export default class CoveyTownController {
    * @param session PlayerSession to destroy
    */
   destroySession(session: PlayerSession): void {
-    this._players = this._players.filter((p) => p.id !== session.player.id);
-    this._sessions = this._sessions.filter((s) => s.sessionToken !== session.sessionToken);
-    this._listeners.forEach((listener) => listener.onPlayerDisconnected(session.player));
+    this._players = this._players.filter(p => p.id !== session.player.id);
+    this._sessions = this._sessions.filter(s => s.sessionToken !== session.sessionToken);
+    this._listeners.forEach(listener => listener.onPlayerDisconnected(session.player));
   }
 
   /**
@@ -115,9 +150,9 @@ export default class CoveyTownController {
    * @param player Player to update location for
    * @param location New location for this player
    */
-  updatePlayerLocation(player: Player, location: UserLocation): void {
+  onPlayerMovement(player: Player, location: UserLocation): void {
     player.updateLocation(location);
-    this._listeners.forEach((listener) => listener.onPlayerMoved(player));
+    this._listeners.forEach(listener => listener.onPlayerMoved(player));
   }
 
   /**
@@ -137,7 +172,7 @@ export default class CoveyTownController {
    * with addTownListener, or otherwise will be a no-op
    */
   removeTownListener(listener: CoveyTownListener): void {
-    this._listeners = this._listeners.filter((v) => v !== listener);
+    this._listeners = this._listeners.filter(v => v !== listener);
   }
 
   /**
@@ -147,10 +182,40 @@ export default class CoveyTownController {
    * @param token
    */
   getSessionByToken(token: string): PlayerSession | undefined {
-    return this._sessions.find((p) => p.sessionToken === token);
+    return this._sessions.find(p => p.sessionToken === token);
   }
 
   disconnectAllPlayers(): void {
-    this._listeners.forEach((listener) => listener.onTownDestroyed());
+    this._listeners.forEach(listener => listener.onTownDestroyed());
+  }
+
+  connect(socket: Socket, sessionToken: string): void {
+    const session = this._sessions.find(p => p.sessionToken === sessionToken);
+    if (!session) {
+      socket.disconnect(true);
+    } else {
+      const listener = townSocketAdapter(socket);
+      this.addTownListener(listener);
+
+      // Register an event listener for the client socket: if the client disconnects,
+      // clean up our listener adapter, and then let the CoveyTownController know that the
+      // player's session is disconnected
+      socket.on('disconnect', () => {
+        this.onDisconnect(listener, session);
+      });
+
+      // Register an event listener for the client socket: if the client updates their
+      // location, inform the CoveyTownController
+      socket.on('playerMovement', (movementData: UserLocation) => {
+        this.onPlayerMovement(session.player, movementData);
+      });
+    }
+  }
+
+  private onDisconnect(listener: CoveyTownListener, sessionToken: PlayerSession) {
+    this.removeTownListener(listener);
+    this._players = this._players.filter(p => p.id !== sessionToken.player.id);
+    this._sessions = this._sessions.filter(s => s.sessionToken !== sessionToken.sessionToken);
+    this._listeners.forEach(l => l.onPlayerDisconnected(sessionToken.player));
   }
 }

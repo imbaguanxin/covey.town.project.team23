@@ -12,6 +12,6 @@ export default function useHandleTrackPublicationFailed(room: Room, onError: Cal
         localParticipant.off('trackPublicationFailed', onError);
       };
     }
-    return () => { };
+    return () => {};
   }, [localParticipant, onError]);
 }
