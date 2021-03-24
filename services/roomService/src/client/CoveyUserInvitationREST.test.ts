@@ -1,12 +1,22 @@
+import { assert } from 'console';
 import CORS from 'cors';
 import Express from 'express';
 import http from 'http';
 import { AddressInfo } from 'net';
+import { getInvitationLinkHandler, joinLinkHandler } from '../requestHandlers/UserInvitationRequestHandlers';
 import addTownsRoutes from '../router/towns';
 import addUserInvitationRoutes from '../router/userInvitations';
-import TownsServiceClient, { TownCreateResponse } from './TownsServiceClient';
+import TownsServiceClient, { ResponseEnvelope, TownCreateResponse } from './TownsServiceClient';
 import UserServiceClient from './UsersInvitationClient';
 
+function unwrapResponse<T>(response: ResponseEnvelope<T>): T {
+  if (response === undefined || response.response === undefined){
+    throw new Error(`Error processing request: ${response.message}`);
+  }
+  assert(response.response);
+  return response.response;
+}
+  
 describe('UserInvitationServiceAPIREST', () => {
   /* A testing server that will be deployed before testing and reused throughout all of the tests */
   let server: http.Server;
@@ -44,6 +54,20 @@ describe('UserInvitationServiceAPIREST', () => {
   describe('InvitationAndAcceptAsOutsideUserAPI', () => {
     it('The town id quried from invitation link and join invitation link should match', async () => {
       const response1 = await apiClient.getInvitationIDOfTown({ townID: town1.coveyTownID });
+      const response2 = await apiClient.joinUsingUrl({ invitationID: response1.invitationID });
+      expect(response2.conveyTownID).toBe(town1.coveyTownID);
+      expect(response2.friendlyName).toBe('town1');
+    });
+
+    it('The join invitation link should be correct', async () => {
+      const response1 = await apiClient.getInvitationIDOfTown({ townID: town1.coveyTownID });
+      const response2 = unwrapResponse(await joinLinkHandler({ invitationID: response1.invitationID }));
+      expect(response2.conveyTownID).toBe(town1.coveyTownID);
+      expect(response2.friendlyName).toBe('town1');
+    });
+
+    it('The town id quried from invitation link should be correct', async () => {
+      const response1 = unwrapResponse(await getInvitationLinkHandler({ coveyTownID: town1.coveyTownID }));
       const response2 = await apiClient.joinUsingUrl({ invitationID: response1.invitationID });
       expect(response2.conveyTownID).toBe(town1.coveyTownID);
       expect(response2.friendlyName).toBe('town1');
