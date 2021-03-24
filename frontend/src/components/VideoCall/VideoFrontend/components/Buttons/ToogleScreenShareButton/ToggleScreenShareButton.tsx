@@ -13,17 +13,19 @@ export const STOP_SCREEN_SHARE_TEXT = 'Stop Sharing Screen';
 export const SHARE_IN_PROGRESS_TEXT = 'Cannot share screen when another user is sharing';
 export const SHARE_NOT_SUPPORTED_TEXT = 'Screen sharing is not supported with this browser';
 
-const useStyles = makeStyles((theme: Theme) => createStyles({
-  button: {
-    margin: theme.spacing(1),
-    '&[disabled]': {
-      color: '#bbb',
-      '& svg *': {
-        fill: '#bbb',
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    button: {
+      'margin': theme.spacing(1),
+      '&[disabled]': {
+        'color': '#bbb',
+        '& svg *': {
+          fill: '#bbb',
+        },
       },
     },
-  },
-}));
+  }),
+);
 
 export default function ToggleScreenShareButton(props: { disabled?: boolean }) {
   const classes = useStyles();
@@ -44,22 +46,11 @@ export default function ToggleScreenShareButton(props: { disabled?: boolean }) {
   }
 
   return (
-    <Tooltip
-      title={tooltipMessage}
-      placement="top"
-      PopperProps={{ disablePortal: true }}
-      style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }}
-    >
+    <Tooltip title={tooltipMessage} placement='top' PopperProps={{ disablePortal: true }} style={{ cursor: isDisabled ? 'not-allowed' : 'pointer' }}>
       <span>
         {/* The span element is needed because a disabled button will not emit hover events and we want to display
           a tooltip when screen sharing is disabled */}
-        <Button
-          className={classes.button}
-          onClick={toggleScreenShare}
-          disabled={isDisabled}
-          startIcon={<ScreenShareIcon />}
-          data-cy-share-screen
-        >
+        <Button className={classes.button} onClick={toggleScreenShare} disabled={isDisabled} startIcon={<ScreenShareIcon />} data-cy-share-screen>
           {SCREEN_SHARE_TEXT}
         </Button>
       </span>

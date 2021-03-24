@@ -18,7 +18,7 @@ export default function useTrack(publication: LocalTrackPublication | RemoteTrac
         publication.off('unsubscribed', removeTrack);
       };
     }
-    return () => { };
+    return () => {};
   }, [publication]);
 
   return track;

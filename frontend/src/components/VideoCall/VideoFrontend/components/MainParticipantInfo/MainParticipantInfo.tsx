@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import { makeStyles, Theme } from '@material-ui/core/styles';
-import {
-  LocalAudioTrack, LocalVideoTrack, Participant, RemoteAudioTrack, RemoteVideoTrack,
-} from 'twilio-video';
+import { LocalAudioTrack, LocalVideoTrack, Participant, RemoteAudioTrack, RemoteVideoTrack } from 'twilio-video';
 
 import Typography from '@material-ui/core/Typography';
 import AvatarIcon from '../../icons/AvatarIcon';
@@ -26,11 +24,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer',
   },
   identity: {
-    background: 'rgba(0, 0, 0, 0.5)',
-    color: 'white',
-    padding: '0.1em 0.3em 0.1em 0',
-    fontSize: '1.2em',
-    display: 'inline-flex',
+    'background': 'rgba(0, 0, 0, 0.5)',
+    'color': 'white',
+    'padding': '0.1em 0.3em 0.1em 0',
+    'fontSize': '1.2em',
+    'display': 'inline-flex',
     '& svg': {
       marginLeft: '0.3em',
     },
@@ -60,16 +58,16 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   avatarContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    background: 'black',
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    bottom: 0,
-    left: 0,
-    zIndex: 1,
+    'display': 'flex',
+    'alignItems': 'center',
+    'justifyContent': 'center',
+    'background': 'black',
+    'position': 'absolute',
+    'top': 0,
+    'right': 0,
+    'bottom': 0,
+    'left': 0,
+    'zIndex': 1,
     '& svg': {
       transform: 'scale(2)',
     },
@@ -92,14 +90,14 @@ export default function MainParticipantInfo({ participant, children }: MainParti
   // const isRemoteParticipantScreenSharing = screenShareParticipant && screenShareParticipant !== localParticipant;
 
   const publications = usePublications(participant);
-  const videoPublication = publications.find((p) => p.trackName.includes('camera'));
-  const screenSharePublication = publications.find((p) => p.trackName.includes('screen'));
+  const videoPublication = publications.find(p => p.trackName.includes('camera'));
+  const screenSharePublication = publications.find(p => p.trackName.includes('screen'));
   const setSelectedParticipant = useSelectedParticipant()[1];
 
   const videoTrack = useTrack(screenSharePublication || videoPublication);
   const isVideoEnabled = Boolean(videoTrack);
 
-  const audioPublication = publications.find((p) => p.kind === 'audio');
+  const audioPublication = publications.find(p => p.kind === 'audio');
   const audioTrack = useTrack(audioPublication) as LocalAudioTrack | RemoteAudioTrack | undefined;
 
   const isVideoSwitchedOff = useIsTrackSwitchedOff(videoTrack as LocalVideoTrack | RemoteVideoTrack);
@@ -115,12 +113,11 @@ export default function MainParticipantInfo({ participant, children }: MainParti
       className={clsx(classes.container, {
         [classes.fullWidth]: false,
       })}
-      onClick={() => setSelectedParticipant(participant)}
-    >
+      onClick={() => setSelectedParticipant(participant)}>
       <div className={classes.infoContainer}>
         <div className={classes.identity}>
           <AudioLevelIndicator audioTrack={audioTrack} />
-          <Typography variant="body1" color="inherit">
+          <Typography variant='body1' color='inherit'>
             {participantProfile ? participantProfile.displayName : ''}
             {isLocal && ' (You)'}
             {screenSharePublication && ' - Screen'}
@@ -134,7 +131,7 @@ export default function MainParticipantInfo({ participant, children }: MainParti
       )}
       {isParticipantReconnecting && (
         <div className={classes.reconnectingContainer}>
-          <Typography variant="body1" style={{ color: 'white' }}>
+          <Typography variant='body1' style={{ color: 'white' }}>
             Reconnecting...
           </Typography>
         </div>

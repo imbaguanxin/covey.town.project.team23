@@ -4,10 +4,7 @@ import { EventEmitter } from 'events';
 declare module 'twilio-video' {
   interface LocalParticipant {
     setBandwidthProfile: (bandwidthProfile: BandwidthProfileOptions) => void;
-    publishTrack(
-      track: LocalTrack,
-      options?: { priority: Track.Priority },
-    ): Promise<LocalTrackPublication>;
+    publishTrack(track: LocalTrack, options?: { priority: Track.Priority }): Promise<LocalTrackPublication>;
   }
 
   interface VideoCodecSettings {

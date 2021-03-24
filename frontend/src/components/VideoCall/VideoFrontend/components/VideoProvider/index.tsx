@@ -1,12 +1,5 @@
 import React, { createContext, ReactNode } from 'react';
-import {
-  CreateLocalTrackOptions,
-  ConnectOptions,
-  LocalAudioTrack,
-  LocalVideoTrack,
-  Room,
-  TwilioError,
-} from 'twilio-video';
+import { CreateLocalTrackOptions, ConnectOptions, LocalAudioTrack, LocalVideoTrack, Room, TwilioError } from 'twilio-video';
 import { Callback, ErrorCallback } from '../../types';
 import { SelectedParticipantProvider } from './useSelectedParticipant/useSelectedParticipant';
 
@@ -53,9 +46,7 @@ interface VideoProviderProps {
   children: ReactNode;
 }
 
-export function VideoProvider({
-  options, children, onError = () => {}, onDisconnect = () => {},
-}: VideoProviderProps) {
+export function VideoProvider({ options, children, onError = () => {}, onDisconnect = () => {} }: VideoProviderProps) {
   const onErrorCallback = (error: TwilioError) => {
     // tslint:disable-next-line:no-console
     console.log(`ERROR: ${error.message}`, error);
@@ -98,8 +89,7 @@ export function VideoProvider({
         isSharingScreen,
         toggleScreenShare,
         getAudioAndVideoTracks,
-      }}
-    >
+      }}>
       <SelectedParticipantProvider room={room}>
         <PresentingProvider>{children}</PresentingProvider>
       </SelectedParticipantProvider>

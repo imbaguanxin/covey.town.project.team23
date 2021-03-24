@@ -1,19 +1,15 @@
-import React, {
-  createContext, useContext, useReducer, useState,
-} from 'react';
+import React, { createContext, useContext, useReducer, useState } from 'react';
 import { TwilioError } from 'twilio-video';
 import assert from 'assert';
 import { RoomType } from '../types';
-import {
-  settingsReducer, initialSettings, Settings, SettingsAction,
-} from './settings/settingsReducer';
+import { settingsReducer, initialSettings, Settings, SettingsAction } from './settings/settingsReducer';
 import { VideoRoom } from '../../../../CoveyTypes';
 
 export interface StateContextType {
   error: TwilioError | null;
   setError(error: TwilioError | null): void;
   getToken(
-    room: VideoRoom
+    room: VideoRoom,
   ): Promise<{
     token: string | null;
     expiry: Date | null;
@@ -67,15 +63,15 @@ export default function AppStateProvider(
     highlightedProfiles: props.highlightedProfiles,
   } as StateContextType;
 
-  const getToken: StateContextType['getToken'] = (room) => {
+  const getToken: StateContextType['getToken'] = room => {
     setIsFetching(true);
     return contextValue
       .getToken(room)
-      .then((res) => {
+      .then(res => {
         setIsFetching(false);
         return res;
       })
-      .catch((err) => {
+      .catch(err => {
         setError(err);
         setIsFetching(false);
         return Promise.reject(err);

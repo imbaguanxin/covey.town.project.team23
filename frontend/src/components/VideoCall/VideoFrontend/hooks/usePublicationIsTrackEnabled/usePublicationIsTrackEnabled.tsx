@@ -19,7 +19,7 @@ export default function usePublicationIsTrackEnabled(publication?: PublicationTy
         publication.off('trackDisabled', setDisabled);
       };
     }
-    return () => { };
+    return () => {};
   }, [publication]);
 
   return isEnabled;

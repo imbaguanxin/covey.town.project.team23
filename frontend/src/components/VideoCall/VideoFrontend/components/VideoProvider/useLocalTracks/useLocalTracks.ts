@@ -1,10 +1,7 @@
 import { useCallback, useState } from 'react';
 import Video, { LocalVideoTrack, LocalAudioTrack, CreateLocalTrackOptions } from 'twilio-video';
 import { useMutex } from 'react-context-mutex';
-import {
-  useHasAudioInputDevices,
-  useHasVideoInputDevices,
-} from '../../../hooks/deviceHooks/deviceHooks';
+import { useHasAudioInputDevices, useHasVideoInputDevices } from '../../../hooks/deviceHooks/deviceHooks';
 import { DEFAULT_VIDEO_CONSTRAINTS } from '../../../constants';
 import LocalStorage_TwilioVideo from '../../../../../../classes/LocalStorage/TwilioVideo';
 

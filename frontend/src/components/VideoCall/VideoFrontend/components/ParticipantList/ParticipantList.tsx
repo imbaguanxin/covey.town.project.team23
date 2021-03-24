@@ -12,52 +12,54 @@ import { UserProfile } from '../../../../../CoveyTypes';
 import useNearbyPlayers from '../../../../../hooks/useNearbyPlayers';
 
 function useStyles(width: 'sidebar' | 'fullwidth') {
-  return makeStyles((theme: Theme) => createStyles({
-    container: {
-      padding: '2em',
-      overflowY: 'auto',
-      background: 'rgb(79, 83, 85)',
-      gridArea: '1 / 2 / 1 / 3',
-      zIndex: 5,
-      [theme.breakpoints.down('sm')]: {
-        gridArea: '2 / 1 / 3 / 3',
-        overflowY: 'initial',
-        overflowX: 'auto',
-        display: 'flex',
-        padding: '8px',
+  return makeStyles((theme: Theme) =>
+    createStyles({
+      container: {
+        padding: '2em',
+        overflowY: 'auto',
+        background: 'rgb(79, 83, 85)',
+        gridArea: '1 / 2 / 1 / 3',
+        zIndex: 5,
+        [theme.breakpoints.down('sm')]: {
+          gridArea: '2 / 1 / 3 / 3',
+          overflowY: 'initial',
+          overflowX: 'auto',
+          display: 'flex',
+          padding: '8px',
+        },
       },
-    },
-    transparentBackground: {
-      background: 'transparent',
-    },
-    scrollContainer: {
-      [theme.breakpoints.down('sm')]: {
-        display: 'flex',
+      transparentBackground: {
+        background: 'transparent',
       },
-    },
-    gridContainer: {
-      gridArea: '1 / 1 / 1 / 3',
-      overflowX: 'hidden',
-      overflowY: 'auto',
-      [theme.breakpoints.down('sm')]: {
-        gridArea: '1 / 1 / 3 / 1',
+      scrollContainer: {
+        [theme.breakpoints.down('sm')]: {
+          display: 'flex',
+        },
       },
-    },
-    gridInnerContainer: {
-      display: 'grid',
-      gridTemplateColumns: width === 'sidebar' ? '1fr' : '1fr 1fr 1fr 1fr',
-      gridAutoRows: '1fr',
-      [theme.breakpoints.down('md')]: {
-        gridTemplateColumns: width === 'sidebar' ? '1fr' : '1fr 1fr 1fr',
+      gridContainer: {
+        gridArea: '1 / 1 / 1 / 3',
+        overflowX: 'hidden',
+        overflowY: 'auto',
+        [theme.breakpoints.down('sm')]: {
+          gridArea: '1 / 1 / 3 / 1',
+        },
       },
-      [theme.breakpoints.down('sm')]: {
-        gridTemplateColumns: width === 'sidebar' ? '1fr' : '1fr 1fr',
+      gridInnerContainer: {
+        display: 'grid',
+        gridTemplateColumns: width === 'sidebar' ? '1fr' : '1fr 1fr 1fr 1fr',
+        gridAutoRows: '1fr',
+        [theme.breakpoints.down('md')]: {
+          gridTemplateColumns: width === 'sidebar' ? '1fr' : '1fr 1fr 1fr',
+        },
+        [theme.breakpoints.down('sm')]: {
+          gridTemplateColumns: width === 'sidebar' ? '1fr' : '1fr 1fr',
+        },
+        [theme.breakpoints.down('xs')]: {
+          gridTemplateColumns: '1fr',
+        },
       },
-      [theme.breakpoints.down('xs')]: {
-        gridTemplateColumns: '1fr',
-      },
-    },
-  }))();
+    }),
+  )();
 }
 
 export default function ParticipantList(props: { gridView: boolean }) {
@@ -85,24 +87,22 @@ export default function ParticipantList(props: { gridView: boolean }) {
         participant={localParticipant}
         isLocalParticipant
         insideGrid={props.gridView}
-                // highlight={highlightedProfiles?.includes(localUserProfile.id) ?? false}
+        // highlight={highlightedProfiles?.includes(localUserProfile.id) ?? false}
         slot={0}
       />
       {participants
-        .filter((p) => nearbyPlayers.find((player) => player.id == p.participant.identity))
-        .sort(participantSorter).map((participantWithSlot) => {
+        .filter(p => nearbyPlayers.find(player => player.id == p.participant.identity))
+        .sort(participantSorter)
+        .map(participantWithSlot => {
           const { participant } = participantWithSlot;
           const isSelected = participant === selectedParticipant;
-          const hideParticipant = participant === mainParticipant
-                    && participant !== screenShareParticipant
-                    && !isSelected
-                    && participants.length > 1;
-          const player = nearbyPlayers.find((p) => p.id == participantWithSlot.participant.identity);
+          const hideParticipant = participant === mainParticipant && participant !== screenShareParticipant && !isSelected && participants.length > 1;
+          const player = nearbyPlayers.find(p => p.id == participantWithSlot.participant.identity);
           const remoteProfile = { displayName: player ? player.userName : 'unknown', id: participantWithSlot.participant.identity };
           return (
             <Participant
               key={participant.sid}
-                        // highlight={highlightedProfiles?.includes(participant.identity) ?? false}
+              // highlight={highlightedProfiles?.includes(participant.identity) ?? false}
               participant={participant}
               profile={remoteProfile}
               isSelected={participant === selectedParticipant}
@@ -128,16 +128,14 @@ export default function ParticipantList(props: { gridView: boolean }) {
           // "single-column": preferredMode === "sidebar" && props.gridView,
           'single-column': false,
         },
-      )}
-    >
+      )}>
       <div className={classes.gridInnerContainer}>{participantsEl}</div>
     </main>
   ) : (
     <aside
       className={clsx(classes.container, {
         [classes.transparentBackground]: true,
-      })}
-    >
+      })}>
       <div className={classes.scrollContainer}>{participantsEl}</div>
     </aside>
   );

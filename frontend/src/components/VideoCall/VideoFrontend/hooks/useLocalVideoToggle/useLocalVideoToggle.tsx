@@ -33,8 +33,8 @@ export default function useLocalVideoToggle() {
           const lastCamera = LocalStorage_TwilioVideo.twilioVideoLastCamera;
           const track = lastCamera
             ? await getLocalVideoTrack({
-              deviceId: { exact: lastCamera },
-            })
+                deviceId: { exact: lastCamera },
+              })
             : await getLocalVideoTrack();
           localParticipant?.publishTrack(track, { priority: 'low' });
         } catch (e) {

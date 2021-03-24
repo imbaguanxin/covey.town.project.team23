@@ -13,7 +13,7 @@ import { useAppState } from '../../../../state';
 
 const useStyles = makeStyles((theme: Theme) => ({
   settingsButton: {
-    margin: '1.8em 0 0',
+    'margin': '1.8em 0 0',
     '&:hover': {
       color: 'black',
     },
@@ -33,27 +33,17 @@ export default function SettingsMenu({ mobileButtonClass }: { mobileButtonClass?
   return (
     <>
       {isMobile ? (
-        <Button
-          ref={anchorRef}
-          onClick={() => setMenuOpen(true)}
-          startIcon={<MoreIcon />}
-          className={mobileButtonClass}
-        >
+        <Button ref={anchorRef} onClick={() => setMenuOpen(true)} startIcon={<MoreIcon />} className={mobileButtonClass}>
           More
         </Button>
       ) : (
-        <Button
-          ref={anchorRef}
-          onClick={() => setMenuOpen(true)}
-          startIcon={<SettingsIcon />}
-          className={classes.settingsButton}
-        >
+        <Button ref={anchorRef} onClick={() => setMenuOpen(true)} startIcon={<SettingsIcon />} className={classes.settingsButton}>
           Settings
         </Button>
       )}
       <MenuContainer
         open={menuOpen}
-        onClose={() => setMenuOpen((isOpen) => !isOpen)}
+        onClose={() => setMenuOpen(isOpen => !isOpen)}
         anchorEl={anchorRef.current}
         anchorOrigin={{
           vertical: 'bottom',
@@ -62,15 +52,14 @@ export default function SettingsMenu({ mobileButtonClass }: { mobileButtonClass?
         transformOrigin={{
           vertical: isMobile ? -55 : -45,
           horizontal: 'center',
-        }}
-      >
+        }}>
         <MenuItem onClick={() => setDeviceSettingsOpen(true)}>
-          <Typography variant="body1">Audio and Video Settings</Typography>
+          <Typography variant='body1'>Audio and Video Settings</Typography>
         </MenuItem>
         {roomType !== 'peer-to-peer' && roomType !== 'go' && (
-        <MenuItem onClick={() => setConnectionSettingsOpen(true)}>
-          <Typography variant="body1">Connection Settings</Typography>
-        </MenuItem>
+          <MenuItem onClick={() => setConnectionSettingsOpen(true)}>
+            <Typography variant='body1'>Connection Settings</Typography>
+          </MenuItem>
         )}
       </MenuContainer>
       <DeviceSelectionDialog

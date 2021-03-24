@@ -19,19 +19,7 @@ interface ParticipantProps {
   highlight?: boolean;
 }
 
-export default function Participant({
-  participant,
-  profile,
-  videoOnly,
-  enableScreenShare,
-  onClick,
-  isSelected,
-  isLocalParticipant,
-  hideParticipant,
-  slot,
-  insideGrid,
-  highlight,
-}: ParticipantProps) {
+export default function Participant({ participant, profile, videoOnly, enableScreenShare, onClick, isSelected, isLocalParticipant, hideParticipant, slot, insideGrid, highlight }: ParticipantProps) {
   return (
     <ParticipantInfo
       participant={participant}
@@ -42,14 +30,8 @@ export default function Participant({
       hideParticipant={hideParticipant}
       slot={slot}
       insideGrid={insideGrid}
-      highlight={highlight}
-    >
-      <ParticipantTracks
-        participant={participant}
-        videoOnly={videoOnly}
-        enableScreenShare={enableScreenShare}
-        isLocalParticipant={isLocalParticipant}
-      />
+      highlight={highlight}>
+      <ParticipantTracks participant={participant} videoOnly={videoOnly} enableScreenShare={enableScreenShare} isLocalParticipant={isLocalParticipant} />
     </ParticipantInfo>
   );
 }

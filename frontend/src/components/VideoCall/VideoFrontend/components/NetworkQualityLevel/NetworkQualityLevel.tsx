@@ -4,11 +4,11 @@ import { Participant } from 'twilio-video';
 import useParticipantNetworkQualityLevel from '../../hooks/useParticipantNetworkQualityLevel/useParticipantNetworkQualityLevel';
 
 const Container = styled('div')({
-  display: 'flex',
-  alignItems: 'flex-end',
+  'display': 'flex',
+  'alignItems': 'flex-end',
   '& div': {
-    width: '2px',
-    marginRight: '1px',
+    'width': '2px',
+    'marginRight': '1px',
     '&:not(:last-child)': {
       borderRight: 'none',
     },
@@ -25,7 +25,7 @@ export default function NetworkQualityLevel({ participant }: { participant: Part
 
   return (
     <Container>
-      {BARS_ARRAY.map((level) => (
+      {BARS_ARRAY.map(level => (
         <div
           key={level}
           style={{

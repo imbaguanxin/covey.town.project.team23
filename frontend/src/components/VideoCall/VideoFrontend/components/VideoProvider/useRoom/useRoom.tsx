@@ -1,22 +1,13 @@
 import EventEmitter from 'events';
-import Video, {
-  ConnectOptions, LocalAudioTrack, LocalTrack, LocalVideoTrack, Room,
-} from 'twilio-video';
-import {
-  useCallback, useEffect, useRef, useState,
-} from 'react';
+import Video, { ConnectOptions, LocalAudioTrack, LocalTrack, LocalVideoTrack, Room } from 'twilio-video';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { isMobile } from '../../../utils';
 import { Callback } from '../../../types';
 
 // @ts-ignore
 window.TwilioVideo = Video;
 
-export default function useRoom(
-  localAudioTrack: LocalAudioTrack | undefined,
-  localVideoTrack: LocalVideoTrack | undefined,
-  onError: Callback,
-  options?: ConnectOptions,
-) {
+export default function useRoom(localAudioTrack: LocalAudioTrack | undefined, localVideoTrack: LocalVideoTrack | undefined, onError: Callback, options?: ConnectOptions) {
   // @ts-ignore
   const [room, setRoom] = useState<Room>(new EventEmitter() as Room);
   const [isConnecting, setIsConnecting] = useState(false);
@@ -29,11 +20,11 @@ export default function useRoom(
   }, [options]);
 
   const connect = useCallback(
-    (token) => {
+    token => {
       setIsConnecting(true);
-      const localTracks = [localAudioTrack, localVideoTrack].filter((x) => x !== undefined) as LocalTrack[];
+      const localTracks = [localAudioTrack, localVideoTrack].filter(x => x !== undefined) as LocalTrack[];
       return Video.connect(token, { ...optionsRef.current, tracks: localTracks }).then(
-        (newRoom) => {
+        newRoom => {
           setRoom(newRoom);
           const disconnect = () => newRoom.disconnect();
 
@@ -55,11 +46,12 @@ export default function useRoom(
           // @ts-ignore
           window.twilioRoom = newRoom;
 
-          newRoom.localParticipant.videoTracks.forEach((publication) =>
-          // All video tracks are published with 'low' priority because the video track
-          // that is displayed in the 'MainParticipant' component will have it's priority
-          // set to 'high' via track.setPriority()
-            publication.setPriority('low'));
+          newRoom.localParticipant.videoTracks.forEach(publication =>
+            // All video tracks are published with 'low' priority because the video track
+            // that is displayed in the 'MainParticipant' component will have it's priority
+            // set to 'high' via track.setPriority()
+            publication.setPriority('low'),
+          );
 
           setIsConnecting(false);
 
@@ -71,7 +63,7 @@ export default function useRoom(
             window.addEventListener('pagehide', disconnect);
           }
         },
-        (error) => {
+        error => {
           onError(error);
           setIsConnecting(false);
         },

@@ -5,12 +5,5 @@ import useRoomState from '../../hooks/useRoomState/useRoomState';
 export default function ReconnectingNotification() {
   const roomState = useRoomState();
 
-  return (
-    <Snackbar
-      variant="error"
-      headline="Connection Lost:"
-      message="Reconnecting to room..."
-      open={roomState === 'reconnecting'}
-    />
-  );
+  return <Snackbar variant='error' headline='Connection Lost:' message='Reconnecting to room...' open={roomState === 'reconnecting'} />;
 }

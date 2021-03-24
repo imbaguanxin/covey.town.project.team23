@@ -16,11 +16,5 @@ export function PresentingProvider({ children }: PresentingProviderProps) {
   const [selectedParticipant] = useSelectedParticipant();
   const screenShareParticipant = useScreenShareParticipant();
 
-  return (
-    <presentingContext.Provider
-      value={selectedParticipant || screenShareParticipant ? 'presenting' : 'not presenting'}
-    >
-      {children}
-    </presentingContext.Provider>
-  );
+  return <presentingContext.Provider value={selectedParticipant || screenShareParticipant ? 'presenting' : 'not presenting'}>{children}</presentingContext.Provider>;
 }
