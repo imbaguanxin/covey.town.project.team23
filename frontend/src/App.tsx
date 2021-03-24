@@ -7,6 +7,7 @@ import { io, Socket } from 'socket.io-client';
 import { ChakraProvider } from '@chakra-ui/react';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import assert from 'assert';
+import UserInvitation from './components/Invitation/UserInvitation';
 import WorldMap from './components/world/WorldMap';
 import VideoOverlay from './components/VideoCall/VideoOverlay/VideoOverlay';
 import { CoveyAppState, NearbyPlayers } from './CoveyTypes';
@@ -224,6 +225,7 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
     }
     return (
       <div>
+        <UserInvitation />
         <WorldMap />
         <VideoOverlay preferredMode="fullwidth" />
       </div>
