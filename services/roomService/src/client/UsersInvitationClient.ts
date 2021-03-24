@@ -20,7 +20,7 @@ export type CoveyTownInfo = {
 };
 
 
-export default class TownsServiceClient {
+export default class UserServiceClient {
   private _axios: AxiosInstance;
 
   /**
@@ -51,27 +51,27 @@ export default class TownsServiceClient {
   // TODO: making axios requests
   async createUser(requestData: CreateUserBodyRequest):Promise<CreateUserBodyResponse>{
     const responseWrapper= await this._axios.post<ResponseEnvelope<CreateUserBodyResponse>>('/user', requestData);
-    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+    return UserServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
   async listUsers():Promise<ListUserBodyResponse>{
     const responseWrapper= await this._axios.get<ResponseEnvelope<ListUserBodyResponse>>('/user');
-    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+    return UserServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
   async getInvitationIDOfTown(requestData: GetInvitationIDBodyRequest):Promise<GetInvitationIDBodyResponse>{
     const responseWrapper= await this._axios.get<ResponseEnvelope<GetInvitationIDBodyResponse>>(`/invitation/${requestData.townID}`);
-    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+    return UserServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
   async inviteUserInSystem(requestData: InviteUserInSystemBodyRequest):Promise<InviteUserInSystemBodyResponse>{
     const responseWrapper= await this._axios.post<ResponseEnvelope<InviteUserInSystemBodyResponse>>('/invitation', requestData);
-    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+    return UserServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
   async joinUsingUrl(requestData: JoinInvitationBodyRequest):Promise<JoinInvitationBodyResponse>{
     const responseWrapper= await this._axios.get<ResponseEnvelope<JoinInvitationBodyResponse>>(`/joinInvitation/${requestData.invitationID}`);
-    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+    return UserServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
 }
