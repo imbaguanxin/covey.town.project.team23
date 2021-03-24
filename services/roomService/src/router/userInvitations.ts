@@ -35,8 +35,6 @@ export default function addUserInvitationRoutes(http: Server, app: Express): io.
    */
   app.post('/user', BodyParser.json(), async (req, res) => {
     try {
-      console.log('create user')
-      console.log(`username: ${req.body.username}`)
       const result = await userCreateHandler({ username: req.body.username });
       res.status(StatusCodes.OK).json(result);
     } catch (err) {

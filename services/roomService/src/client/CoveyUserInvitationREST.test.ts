@@ -41,8 +41,8 @@ describe('UserInvitationServiceAPIREST', () => {
     });
   });
 
-  describe('InvitationAndAcceptAPI', () => {
-    it('should be matched', async () => {
+  describe('InvitationAndAcceptAsOutsideUserAPI', () => {
+    it('The town id quried from invitation link and join invitation link should match', async () => {
       const response1 = await apiClient.getInvitationIDOfTown({ townID: town1.coveyTownID });
       const response2 = await apiClient.joinUsingUrl({ invitationID: response1.invitationID });
       expect(response2.conveyTownID).toBe(town1.coveyTownID);
@@ -50,7 +50,7 @@ describe('UserInvitationServiceAPIREST', () => {
     });
   });
   describe('CreateUserAPI', () => {
-    it('should create two different users', async () => {
+    it('Each creation request should create different users', async () => {
       const response1 = await apiClient.createUser({ username: 'user1' });
       const response2 = await apiClient.createUser({ username: 'user2' });
       expect(response1.username).toBe('user1');
@@ -58,15 +58,42 @@ describe('UserInvitationServiceAPIREST', () => {
       expect(response1.userToken).not.toBe(response2.userToken);
       expect(response1.userID).not.toBe(response2.userToken);
     });
+
+    it('Should be able to create users with the same username', async () => {
+      const newSameNameUser1 = await apiClient.createUser({ username: 'userSameName' });
+      const newSameNameUser2 = await apiClient.createUser({ username: 'userSameName' });
+      expect(newSameNameUser1.username).toBe(newSameNameUser2.username);
+      expect(newSameNameUser1.userID).not.toBe(newSameNameUser2.userID);
+
+      const userList = await apiClient.listUsers();
+      const userIDList = userList.users.map(u => u.userID);
+      expect(userIDList).toContain(newSameNameUser1.userID);
+      expect(userIDList).toContain(newSameNameUser2.userID);
+    });
+
+    it('Should not allow empty string as username', async () => {
+      try {
+        await apiClient.createUser({ username: '' });
+        fail('creatUser should throw an error if username is empty string');
+      } catch (err) {
+        // expected to throw error.
+      }
+    });
   });
 
   describe('ListUserAPI', () => {
-    it('should list all users', async () => {
-      expect((await apiClient.listUsers()).users.length).toBe(0);
-      await apiClient.createUser({ username: 'user1' });
-      expect((await apiClient.listUsers()).users.length).toBe(1);
-      await apiClient.createUser({ username: 'user2' });
-      expect((await apiClient.listUsers()).users.length).toBe(2);
+    it('List user API should list refresh after creating new users', async () => {
+      const initLength = (await apiClient.listUsers()).users.length;
+
+      const user1 = await apiClient.createUser({ username: 'user1' });
+      let listResponse = await apiClient.listUsers();
+      expect(listResponse.users.length).toBe(initLength + 1);
+      expect(listResponse.users.map(u => u.userID)).toContain(user1.userID);
+
+      const user2 = await apiClient.createUser({ username: 'user2' });
+      listResponse = await apiClient.listUsers();
+      expect(listResponse.users.length).toBe(initLength + 2);
+      expect(listResponse.users.map(u => u.userID)).toContain(user2.userID);
     });
   });
 });
