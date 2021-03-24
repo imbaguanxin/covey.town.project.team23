@@ -35,7 +35,9 @@ export default function addUserInvitationRoutes(http: Server, app: Express): io.
    */
   app.post('/user', BodyParser.json(), async (req, res) => {
     try {
-      const result = await userCreateHandler({ username: req.params.username });
+      console.log('create user')
+      console.log(`username: ${req.body.username}`)
+      const result = await userCreateHandler({ username: req.body.username });
       res.status(StatusCodes.OK).json(result);
     } catch (err) {
       logError(err);
@@ -81,8 +83,8 @@ export default function addUserInvitationRoutes(http: Server, app: Express): io.
   app.post('/invitation', BodyParser.json(), async (req, res) => {
     try {
       const result = await inviteUserInSystemHandler({
-        invitedUserID: req.params.invitedUserID,
-        coveyTownID: req.params.conveyTownID,
+        invitedUserID: req.body.invitedUserID,
+        coveyTownID: req.body.conveyTownID,
       });
       res.status(StatusCodes.OK).json(result);
     } catch (err) {
