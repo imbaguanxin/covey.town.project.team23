@@ -44,13 +44,13 @@ export function createSocketClient(
   sessionToken: string,
   coveyTownID: string,
 ): {
-  socket: Socket;
-  socketConnected: Promise<void>;
-  socketDisconnected: Promise<void>;
-  playerMoved: Promise<RemoteServerPlayer>;
-  newPlayerJoined: Promise<RemoteServerPlayer>;
-  playerDisconnected: Promise<RemoteServerPlayer>;
-} {
+    socket: Socket;
+    socketConnected: Promise<void>;
+    socketDisconnected: Promise<void>;
+    playerMoved: Promise<RemoteServerPlayer>;
+    newPlayerJoined: Promise<RemoteServerPlayer>;
+    playerDisconnected: Promise<RemoteServerPlayer>;
+  } {
   const address = server.address() as AddressInfo;
   const socket = io(`http://localhost:${address.port}`, {
     auth: { token: sessionToken, coveyTownID },
@@ -92,11 +92,7 @@ export function createSocketClient(
     playerDisconnected: playerDisconnectPromise,
   };
 }
-export function setSessionTokenAndTownID(
-  coveyTownID: string,
-  sessionToken: string,
-  socket: ServerSocket,
-): void {
+export function setSessionTokenAndTownID(coveyTownID: string, sessionToken: string, socket: ServerSocket): void {
   // eslint-disable-next-line
   socket.handshake.auth = { token: sessionToken, coveyTownID };
 }

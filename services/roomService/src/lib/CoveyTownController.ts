@@ -41,6 +41,7 @@ export default class CoveyTownController {
   get capacity(): number {
     return this._capacity;
   }
+
   set isPubliclyListed(value: boolean) {
     this._isPubliclyListed = value;
   }
@@ -123,10 +124,7 @@ export default class CoveyTownController {
     this._players.push(newPlayer);
 
     // Create a video token for this user to join this town
-    theSession.videoToken = await this._videoClient.getTokenForTown(
-      this._coveyTownID,
-      newPlayer.id,
-    );
+    theSession.videoToken = await this._videoClient.getTokenForTown(this._coveyTownID, newPlayer.id);
 
     // Notify other players that this player has joined
     this._listeners.forEach(listener => listener.onPlayerJoined(newPlayer));
