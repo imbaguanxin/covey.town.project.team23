@@ -1,6 +1,6 @@
 import { Socket } from 'socket.io';
+import { CoveyCreateUser, CoveyUser, CoveyUserList } from '../CoveyTypes';
 import ActiveUser from '../types/ActiveUser';
-import { CoveyUserList, CoveyUser, CoveyCreateUser } from '../CoveyTypes';
 import CoveyInvitationListener from '../types/CoveyInvitationListener';
 
 function socketAdapter(socket: Socket, userID: string): CoveyInvitationListener {
@@ -12,7 +12,7 @@ function socketAdapter(socket: Socket, userID: string): CoveyInvitationListener 
       socket.disconnect();
     },
     onInvited(coveyTownID: string) {
-      socket.emit('invitedToTown', coveyTownID);
+      socket.emit('invitedToTown', coveyTownID.toString());
     },
   };
 }

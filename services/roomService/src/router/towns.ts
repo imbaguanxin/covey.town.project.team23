@@ -3,14 +3,7 @@ import { Express } from 'express';
 import { Server } from 'http';
 import { StatusCodes } from 'http-status-codes';
 import io from 'socket.io';
-import {
-  townCreateHandler,
-  townDeleteHandler,
-  townJoinHandler,
-  townListHandler,
-  townSubscriptionHandler,
-  townUpdateHandler,
-} from '../requestHandlers/CoveyTownRequestHandlers';
+import { townCreateHandler, townDeleteHandler, townJoinHandler, townListHandler, townSubscriptionHandler, townUpdateHandler } from '../requestHandlers/CoveyTownRequestHandlers';
 import { logError } from '../Utils';
 
 export default function addTownRoutes(http: Server, app: Express): io.Server {
@@ -99,7 +92,7 @@ export default function addTownRoutes(http: Server, app: Express): io.Server {
     }
   });
 
-  const socketServer = new io.Server(http, { cors: { origin: '*' } });
+  const socketServer = new io.Server(http, { path: '/town', cors: { origin: '*' } });
   socketServer.on('connection', townSubscriptionHandler);
   return socketServer;
 }

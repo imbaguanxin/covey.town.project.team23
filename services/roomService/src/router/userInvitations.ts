@@ -3,14 +3,7 @@ import { Express } from 'express';
 import { Server } from 'http';
 import { StatusCodes } from 'http-status-codes';
 import io from 'socket.io';
-import {
-  getInvitationLinkHandler,
-  inviteUserInSystemHandler,
-  joinLinkHandler,
-  userCreateHandler,
-  userListHandler,
-  userSubscriptionHandler,
-} from '../requestHandlers/UserInvitationRequestHandlers';
+import { getInvitationLinkHandler, inviteUserInSystemHandler, joinLinkHandler, userCreateHandler, userListHandler, userSubscriptionHandler } from '../requestHandlers/UserInvitationRequestHandlers';
 import { logError } from '../Utils';
 
 export default function addUserInvitationRoutes(http: Server, app: Express): io.Server {
@@ -35,6 +28,7 @@ export default function addUserInvitationRoutes(http: Server, app: Express): io.
    */
   app.post('/user', BodyParser.json(), async (req, res) => {
     try {
+      // console.log('creating user');
       const result = await userCreateHandler({ username: req.body.username });
       res.status(StatusCodes.OK).json(result);
     } catch (err) {
@@ -93,7 +87,8 @@ export default function addUserInvitationRoutes(http: Server, app: Express): io.
     }
   });
 
-  const socketServer = new io.Server(http, { cors: { origin: '*' } });
+  // console.log('creating user invitaiton socket server');
+  const socketServer = new io.Server(http, { path: '/user', cors: { origin: '*' } });
   socketServer.on('connection', userSubscriptionHandler);
   return socketServer;
 }

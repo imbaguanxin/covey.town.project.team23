@@ -53,6 +53,7 @@ export function createSocketClient(
   } {
   const address = server.address() as AddressInfo;
   const socket = io(`http://localhost:${address.port}`, {
+    path: '/town',
     auth: { token: sessionToken, coveyTownID },
     reconnection: false,
     timeout: 5000,
