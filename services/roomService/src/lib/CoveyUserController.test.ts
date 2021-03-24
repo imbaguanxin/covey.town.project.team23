@@ -26,10 +26,7 @@ function createUserForTesting(usernameToUse?: string) {
 }
 
 function createTownForTesting(friendlyNameToUse?: string, isPublic = false) {
-  const friendlyName =
-    friendlyNameToUse !== undefined
-      ? friendlyNameToUse
-      : `${isPublic ? 'Public' : 'Private'}TestingTown=${nanoid()}`;
+  const friendlyName = friendlyNameToUse !== undefined ? friendlyNameToUse : `${isPublic ? 'Public' : 'Private'}TestingTown=${nanoid()}`;
   return CoveyTownsStore.getInstance().createTown(friendlyName, isPublic);
 }
 
@@ -75,13 +72,13 @@ describe('CoveyUserController', () => {
     });
   });
 
-    describe('inviteUser', () => {
-      it('Should fail if the userID does not exist', async () => {
-        const town = createTownForTesting();
-        const res = CoveyUserController.getInstance().inviteUser('', town.coveyTownID);
-        expect(res).toBe(false);
-      });
+  describe('inviteUser', () => {
+    it('Should fail if the userID does not exist', async () => {
+      const town = createTownForTesting();
+      const res = CoveyUserController.getInstance().inviteUser('', town.coveyTownID);
+      expect(res).toBe(false);
     });
+  });
 
   describe('listUsers', () => {
     it('Should include all users', async () => {
@@ -93,48 +90,38 @@ describe('CoveyUserController', () => {
       expect(entry[0].userID).toBe(user.userID);
     });
     it('Should include each userID if there are multiple users with the same username', async () => {
-        const firstUser = createUserForTesting();
-        const secondUser = createUserForTesting(firstUser.username);
-        const users = CoveyUserController.getInstance()
-          .getUsers()
-          .filter(userInfo => userInfo.username === firstUser.username);
-        expect(users.length).toBe(2);
-        expect(users[0].username).toBe(firstUser.username);
-        expect(users[1].username).toBe(firstUser.username);
-  
-        if (users[0].userID === firstUser.userID) {
-          expect(users[1].userID).toBe(secondUser.userID);
-        } else if (users[1].userID === firstUser.userID) {
-          expect(users[0].userID).toBe(firstUser.userID);
-        } else {
-          fail('Expected the userIDs to match the users that were created');
-        }
-      });
-      it('Should not include deleted users', async () => {
-        const user = createUserForTesting();
-        console.log(user);
-        console.log(CoveyUserController.getInstance().getUsers());
-        const users = CoveyUserController.getInstance()
-          .getUsers()
-          .filter(
-            userInfo =>
-              userInfo.username === user.username ||
-              userInfo.userID === user.userID,
-          );
-        expect(users.length).toBe(1);
-        const res = CoveyUserController.getInstance().deleteUser(
-          user.userID
-        );
-        expect(res).toBe(true);
-        console.log(CoveyUserController.getInstance().getUsers());
-        const usersPostDelete = CoveyUserController.getInstance()
-          .getUsers()
-          .filter(
-            userInfo =>
-              userInfo.username === user.username ||
-              userInfo.userID === user.userID,
-          );
-        expect(usersPostDelete.length).toBe(0);
-      });
+      const firstUser = createUserForTesting();
+      const secondUser = createUserForTesting(firstUser.username);
+      const users = CoveyUserController.getInstance()
+        .getUsers()
+        .filter(userInfo => userInfo.username === firstUser.username);
+      expect(users.length).toBe(2);
+      expect(users[0].username).toBe(firstUser.username);
+      expect(users[1].username).toBe(firstUser.username);
+
+      if (users[0].userID === firstUser.userID) {
+        expect(users[1].userID).toBe(secondUser.userID);
+      } else if (users[1].userID === firstUser.userID) {
+        expect(users[0].userID).toBe(firstUser.userID);
+      } else {
+        fail('Expected the userIDs to match the users that were created');
+      }
+    });
+    it('Should not include deleted users', async () => {
+      const user = createUserForTesting();
+      console.log(user);
+      console.log(CoveyUserController.getInstance().getUsers());
+      const users = CoveyUserController.getInstance()
+        .getUsers()
+        .filter(userInfo => userInfo.username === user.username || userInfo.userID === user.userID);
+      expect(users.length).toBe(1);
+      const res = CoveyUserController.getInstance().deleteUser(user.userID);
+      expect(res).toBe(true);
+      console.log(CoveyUserController.getInstance().getUsers());
+      const usersPostDelete = CoveyUserController.getInstance()
+        .getUsers()
+        .filter(userInfo => userInfo.username === user.username || userInfo.userID === user.userID);
+      expect(usersPostDelete.length).toBe(0);
+    });
   });
 });

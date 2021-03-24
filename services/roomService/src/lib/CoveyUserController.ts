@@ -22,7 +22,7 @@ export default class CoveyUserController {
 
   private _users: ActiveUser[] = [];
 
-  private _listners: CoveyInvitationListener[] = [];
+  private _listeners: CoveyInvitationListener[] = [];
 
   static getInstance(): CoveyUserController {
     if (CoveyUserController._instance === undefined) {
@@ -63,15 +63,15 @@ export default class CoveyUserController {
   deleteUser(id: string): boolean {
     const existingUser = this.getUserByID(id);
     if (existingUser !== undefined) {
-      this._users.filter(user => user.id !== id);
-      this._listners.filter(userSocket => userSocket.getUserID() !== id);
+      this._users = this._users.filter(user => user.id !== id);
+      this._listeners = this._listeners.filter(userSocket => userSocket.getUserID() !== id);
       return true;
     }
     return false;
   }
 
   addListner(listener: CoveyInvitationListener): void {
-    this._listners.push(listener);
+    this._listeners.push(listener);
   }
 
   inviteUser(userID: string, coveyTownID: string): boolean {
@@ -79,7 +79,7 @@ export default class CoveyUserController {
     if (user === undefined) {
       return false;
     }
-    const userSocket = this._listners.find(listener => listener.getUserID() === userID);
+    const userSocket = this._listeners.find(listener => listener.getUserID() === userID);
     if (userSocket === undefined) {
       return false;
     }
