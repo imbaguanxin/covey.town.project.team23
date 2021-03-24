@@ -3,9 +3,13 @@ import { Heading, Text } from '@chakra-ui/react';
 import DeviceSelectionScreen from './DeviceSelectionScreen/DeviceSelectionScreen';
 import IntroContainer from '../IntroContainer/IntroContainer';
 import { TownJoinResponse } from '../../../../../classes/TownsServiceClient';
+import UserCreation from '../../../../Login/UserCreation';
 import TownSelection from '../../../../Login/TownSelection';
+import useCoveyAppState from '../../../../../hooks/useCoveyAppState';
 
 export default function PreJoinScreens(props: { doLogin: (initData: TownJoinResponse) => Promise<boolean>; setMediaError?(error: Error): void }) {
+  const { userName } = useCoveyAppState();
+
   return (
     <IntroContainer>
       <Heading as="h2" size="xl">Welcome to Covey.Town!</Heading>
@@ -15,7 +19,11 @@ export default function PreJoinScreens(props: { doLogin: (initData: TownJoinResp
         to hang out in, or join an existing one.
       </Text>
       <DeviceSelectionScreen setMediaError={props.setMediaError} />
-      <TownSelection doLogin={props.doLogin} />
+      {
+        (userName === '')
+        ? <UserCreation doLogin={props.doLogin} />
+        : <TownSelection doLogin={props.doLogin} />
+      }
     </IntroContainer>
   );
 }

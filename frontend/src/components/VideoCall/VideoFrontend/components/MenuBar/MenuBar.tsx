@@ -12,7 +12,7 @@ import useVideoContext from '../../hooks/useVideoContext/useVideoContext';
 import ToggleAudioButton from '../Buttons/ToggleAudioButton/ToggleAudioButton';
 import ToggleVideoButton from '../Buttons/ToggleVideoButton/ToggleVideoButton';
 import ToggleScreenShareButton from '../Buttons/ToogleScreenShareButton/ToggleScreenShareButton';
-import TownInvitation from '../../../../Login/TownInvitation';
+import TownInvitation from '../../../../Invitation/TownInvitation';
 import TownSettings from '../../../../Login/TownSettings';
 import MenuContainer from '@material-ui/core/Menu';
 
