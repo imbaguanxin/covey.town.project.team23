@@ -82,7 +82,7 @@ export default function addUserInvitationRoutes(http: Server, app: Express): io.
     try {
       const result = await inviteUserInSystemHandler({
         invitedUserID: req.body.invitedUserID,
-        coveyTownID: req.body.conveyTownID,
+        coveyTownID: req.body.coveyTownID,
       });
       res.status(StatusCodes.OK).json(result);
     } catch (err) {
