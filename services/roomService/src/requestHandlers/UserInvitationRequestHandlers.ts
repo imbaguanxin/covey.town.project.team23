@@ -91,7 +91,6 @@ export async function inviteUserInSystemHandler(
 }
 
 export function userSubscriptionHandler(socket: Socket): void {
-  console.log('trying to subscribe user')
   const { userID, token } = socket.handshake.auth as { userID: string; token: string };
   const userController = CoveyUserController.getInstance();
   userController.connect(userID, token, socket);

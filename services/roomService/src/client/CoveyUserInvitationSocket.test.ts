@@ -4,7 +4,7 @@ import http from 'http'
 import io from 'socket.io';
 import { nanoid } from 'nanoid';
 import { AddressInfo } from 'net';
-import UsersInvitationClient from './UsersInvitationClient';
+import UserServiceClient from './UserServiceClient';
 import TownsServiceClient from './TownsServiceClient';
 import addUserInvitationRoutes from '../router/userInvitations';
 import * as TestUtils from './TestUtils';
@@ -12,7 +12,7 @@ import addTownRoutes from '../router/towns';
 
 describe('UserServiceApiSocket', () => {
     let server: http.Server;
-    let apiUserClient: UsersInvitationClient;
+    let apiUserClient: UserServiceClient;
     let apiTownClient: TownsServiceClient;
 
     let socketServer: io.Server;
@@ -27,7 +27,7 @@ describe('UserServiceApiSocket', () => {
         const address = server.address() as AddressInfo;
 
         const testUrl = `http://127.0.0.1:${address.port}`
-        apiUserClient = new UsersInvitationClient(testUrl);
+        apiUserClient = new UserServiceClient(testUrl);
         apiTownClient = new TownsServiceClient(testUrl);
     });
     afterAll(async () => {
