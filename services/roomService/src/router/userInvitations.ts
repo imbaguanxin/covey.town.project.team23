@@ -93,7 +93,7 @@ export default function addUserInvitationRoutes(http: Server, app: Express): io.
     }
   });
 
-  const socketServer = new io.Server(http, { cors: { origin: '*' } });
+  const socketServer = new io.Server(http, { path: '/user', cors: { origin: '*' } });
   socketServer.on('connection', userSubscriptionHandler);
   return socketServer;
 }
