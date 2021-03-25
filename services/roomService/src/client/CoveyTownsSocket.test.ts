@@ -65,7 +65,7 @@ describe('TownServiceApiSocket', () => {
       coveyTownID: town.coveyTownID,
       userName: nanoid(),
     });
-    const { socketDisconnected } = TestUtils.createSocketClient(
+    const { socketDisconnected } = TestUtils.createTownSocketClient(
       server,
       joinData.coveySessionToken,
       nanoid(),
@@ -75,7 +75,7 @@ describe('TownServiceApiSocket', () => {
   it('Rejects invalid session tokens, even if otherwise valid town id', async () => {
     const town = await createTownForTesting();
     await apiClient.joinTown({ coveyTownID: town.coveyTownID, userName: nanoid() });
-    const { socketDisconnected } = TestUtils.createSocketClient(server, nanoid(), town.coveyTownID);
+    const { socketDisconnected } = TestUtils.createTownSocketClient(server, nanoid(), town.coveyTownID);
     await socketDisconnected;
   });
   it('Dispatches movement updates to all clients in the same town', async () => {
@@ -92,17 +92,17 @@ describe('TownServiceApiSocket', () => {
       coveyTownID: town.coveyTownID,
       userName: nanoid(),
     });
-    const socketSender = TestUtils.createSocketClient(
+    const socketSender = TestUtils.createTownSocketClient(
       server,
       joinData.coveySessionToken,
       town.coveyTownID,
     ).socket;
-    const { playerMoved } = TestUtils.createSocketClient(
+    const { playerMoved } = TestUtils.createTownSocketClient(
       server,
       joinData2.coveySessionToken,
       town.coveyTownID,
     );
-    const { playerMoved: playerMoved2 } = TestUtils.createSocketClient(
+    const { playerMoved: playerMoved2 } = TestUtils.createTownSocketClient(
       server,
       joinData3.coveySessionToken,
       town.coveyTownID,
@@ -120,7 +120,7 @@ describe('TownServiceApiSocket', () => {
       coveyTownID: town.coveyTownID,
       userName: nanoid(),
     });
-    const { socket, socketConnected } = TestUtils.createSocketClient(
+    const { socket, socketConnected } = TestUtils.createTownSocketClient(
       server,
       joinData.coveySessionToken,
       town.coveyTownID,
@@ -130,7 +130,7 @@ describe('TownServiceApiSocket', () => {
     const {
       socket: secondTryWithSameToken,
       socketDisconnected: secondSocketDisconnected,
-    } = TestUtils.createSocketClient(server, joinData.coveySessionToken, town.coveyTownID);
+    } = TestUtils.createTownSocketClient(server, joinData.coveySessionToken, town.coveyTownID);
     await secondSocketDisconnected;
     expect(secondTryWithSameToken.disconnected).toBe(true);
   });
@@ -144,7 +144,7 @@ describe('TownServiceApiSocket', () => {
       coveyTownID: town.coveyTownID,
       userName: nanoid(),
     });
-    const { socketConnected, newPlayerJoined } = TestUtils.createSocketClient(
+    const { socketConnected, newPlayerJoined } = TestUtils.createTownSocketClient(
       server,
       joinData.coveySessionToken,
       town.coveyTownID,
@@ -152,7 +152,7 @@ describe('TownServiceApiSocket', () => {
     const {
       socketConnected: connectPromise2,
       newPlayerJoined: newPlayerPromise2,
-    } = TestUtils.createSocketClient(server, joinData2.coveySessionToken, town.coveyTownID);
+    } = TestUtils.createTownSocketClient(server, joinData2.coveySessionToken, town.coveyTownID);
     await Promise.all([socketConnected, connectPromise2]);
     const newJoinerName = nanoid();
 
@@ -175,7 +175,7 @@ describe('TownServiceApiSocket', () => {
       coveyTownID: town.coveyTownID,
       userName: userWhoLeaves,
     });
-    const { socketConnected, playerDisconnected } = TestUtils.createSocketClient(
+    const { socketConnected, playerDisconnected } = TestUtils.createTownSocketClient(
       server,
       joinData.coveySessionToken,
       town.coveyTownID,
@@ -183,11 +183,11 @@ describe('TownServiceApiSocket', () => {
     const {
       socketConnected: connectPromise2,
       playerDisconnected: playerDisconnectPromise2,
-    } = TestUtils.createSocketClient(server, joinData2.coveySessionToken, town.coveyTownID);
+    } = TestUtils.createTownSocketClient(server, joinData2.coveySessionToken, town.coveyTownID);
     const {
       socket: socketWhoLeaves,
       socketConnected: connectPromise3,
-    } = TestUtils.createSocketClient(server, joinDataWhoLeaves.coveySessionToken, town.coveyTownID);
+    } = TestUtils.createTownSocketClient(server, joinDataWhoLeaves.coveySessionToken, town.coveyTownID);
     await Promise.all([socketConnected, connectPromise2, connectPromise3]);
     socketWhoLeaves.close();
     expect((await playerDisconnected)._userName).toBe(userWhoLeaves);
@@ -203,7 +203,7 @@ describe('TownServiceApiSocket', () => {
       coveyTownID: town.coveyTownID,
       userName: nanoid(),
     });
-    const { socketDisconnected, socketConnected } = TestUtils.createSocketClient(
+    const { socketDisconnected, socketConnected } = TestUtils.createTownSocketClient(
       server,
       joinData.coveySessionToken,
       town.coveyTownID,
@@ -211,7 +211,7 @@ describe('TownServiceApiSocket', () => {
     const {
       socketDisconnected: disconnectPromise2,
       socketConnected: connectPromise2,
-    } = TestUtils.createSocketClient(server, joinData2.coveySessionToken, town.coveyTownID);
+    } = TestUtils.createTownSocketClient(server, joinData2.coveySessionToken, town.coveyTownID);
     await Promise.all([socketConnected, connectPromise2]);
     await apiClient.deleteTown({
       coveyTownID: town.coveyTownID,
