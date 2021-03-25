@@ -1,9 +1,7 @@
 import React from 'react';
 import clsx from 'clsx';
 import CloseIcon from '@material-ui/icons/Close';
-import {
-  IconButton, makeStyles, Theme, Typography,
-} from '@material-ui/core';
+import { IconButton, makeStyles, Theme, Typography } from '@material-ui/core';
 import MUISnackbar from '@material-ui/core/Snackbar';
 import ErrorIcon from '../../icons/ErrorIcon';
 import WarningIcon from '../../icons/WarningIcon';
@@ -50,9 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default function Snackbar({
-  headline, message, variant, open, handleClose,
-}: SnackbarProps) {
+export default function Snackbar({ headline, message, variant, open, handleClose }: SnackbarProps) {
   const classes = useStyles();
 
   const handleOnClose = (_: React.SyntheticEvent | React.MouseEvent, reason?: string) => {
@@ -70,24 +66,22 @@ export default function Snackbar({
         horizontal: 'right',
       }}
       open={open}
-      onClose={handleOnClose}
-    >
+      onClose={handleOnClose}>
       <div
         className={clsx(classes.container, {
           [classes.error]: variant === 'error',
           [classes.warning]: variant === 'warning',
-        })}
-      >
+        })}>
         <div className={classes.contentContainer}>
           <div className={classes.iconContainer}>
             {variant === 'warning' && <WarningIcon />}
             {variant === 'error' && <ErrorIcon />}
           </div>
           <div>
-            <Typography variant="body1" className={classes.headline} component="span">
+            <Typography variant='body1' className={classes.headline} component='span'>
               {headline}
             </Typography>
-            <Typography variant="body1" component="span">
+            <Typography variant='body1' component='span'>
               {' '}
               {message}
             </Typography>
@@ -95,8 +89,8 @@ export default function Snackbar({
         </div>
         <div>
           {handleClose && (
-            <IconButton size="small" aria-label="close" color="inherit" onClick={handleClose}>
-              <CloseIcon fontSize="small" />
+            <IconButton size='small' aria-label='close' color='inherit' onClick={handleClose}>
+              <CloseIcon fontSize='small' />
             </IconButton>
           )}
         </div>

@@ -1,7 +1,5 @@
 import React, { useCallback, useState } from 'react';
-import {
-  FormControl, MenuItem, Typography, Select, Grid,
-} from '@material-ui/core';
+import { FormControl, MenuItem, Typography, Select, Grid } from '@material-ui/core';
 import AudioLevelIndicator from '../../AudioLevelIndicator/AudioLevelIndicator';
 import { useAudioInputDevices } from '../../../hooks/deviceHooks/deviceHooks';
 import useMediaStreamTrack from '../../../hooks/useMediaStreamTrack/useMediaStreamTrack';
@@ -14,9 +12,7 @@ export default function AudioInputList() {
 
   const mediaStreamTrack = useMediaStreamTrack(localAudioTrack);
   const localAudioInputDeviceId = mediaStreamTrack?.getSettings().deviceId;
-  const [lastAudioDeviceId, _setLastAudioDeviceId] = useState<string | null>(
-    LocalStorage_TwilioVideo.twilioVideoLastMic,
-  );
+  const [lastAudioDeviceId, _setLastAudioDeviceId] = useState<string | null>(LocalStorage_TwilioVideo.twilioVideoLastMic);
 
   const setLastAudioDeviceId = useCallback((deviceId: string | null) => {
     LocalStorage_TwilioVideo.twilioVideoLastMic = deviceId;
@@ -30,19 +26,15 @@ export default function AudioInputList() {
 
   return (
     <div>
-      <Typography variant="subtitle2" gutterBottom>
+      <Typography variant='subtitle2' gutterBottom>
         Audio Input
       </Typography>
-      <Grid container alignItems="center" justify="space-between">
-        <div className="inputSelect">
+      <Grid container alignItems='center' justify='space-between'>
+        <div className='inputSelect'>
           {audioInputDevices.length > 1 ? (
             <FormControl fullWidth>
-              <Select
-                onChange={(e) => replaceTrack(e.target.value as string)}
-                value={localAudioInputDeviceId || lastAudioDeviceId}
-                variant="outlined"
-              >
-                {audioInputDevices.map((device) => (
+              <Select onChange={e => replaceTrack(e.target.value as string)} value={localAudioInputDeviceId || lastAudioDeviceId} variant='outlined'>
+                {audioInputDevices.map(device => (
                   <MenuItem value={device.deviceId} key={device.deviceId}>
                     {device.label}
                   </MenuItem>
@@ -53,7 +45,7 @@ export default function AudioInputList() {
             <Typography>{localAudioTrack?.mediaStreamTrack.label || 'No Local Audio'}</Typography>
           )}
         </div>
-        <AudioLevelIndicator audioTrack={localAudioTrack} color="black" />
+        <AudioLevelIndicator audioTrack={localAudioTrack} color='black' />
       </Grid>
     </div>
   );

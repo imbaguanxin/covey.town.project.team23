@@ -1,16 +1,6 @@
 import { VideoTrack } from 'twilio-video';
 
-export type RenderDimensionValue =
-  | 'low'
-  | 'cif'
-  | 'vga'
-  | 'wvga'
-  | '540p'
-  | '720p'
-  | '960p'
-  | 'standard1080p'
-  | 'wide1080p'
-  | 'default';
+export type RenderDimensionValue = 'low' | 'cif' | 'vga' | 'wvga' | '540p' | '720p' | '960p' | 'standard1080p' | 'wide1080p' | 'default';
 
 export interface RenderDimension {
   label: string;

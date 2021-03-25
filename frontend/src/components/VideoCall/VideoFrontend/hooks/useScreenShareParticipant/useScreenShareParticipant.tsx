@@ -15,9 +15,9 @@ export default function useScreenShareParticipant() {
       const updateScreenShareParticipant = () => {
         setScreenShareParticipant(
           Array.from<Participant>(room.participants.values())
-          // the screenshare participant could be the localParticipant
+            // the screenshare participant could be the localParticipant
             .concat(room.localParticipant)
-            .find((participant: Participant) => Array.from<TrackPublication>(participant.tracks.values()).find((track) => track.trackName.includes('screen'))),
+            .find((participant: Participant) => Array.from<TrackPublication>(participant.tracks.values()).find(track => track.trackName.includes('screen'))),
         );
       };
       updateScreenShareParticipant();
@@ -39,7 +39,7 @@ export default function useScreenShareParticipant() {
         room.localParticipant.off('trackUnpublished', updateScreenShareParticipant);
       };
     }
-    return () => { };
+    return () => {};
   }, [room]);
 
   return screenShareParticipant;

@@ -1,6 +1,4 @@
-import React, {
-  createContext, useContext, useState, useEffect,
-} from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 import { Participant, Room } from 'twilio-video';
 
 type selectedParticipantContextType = [Participant | null, (participant: Participant) => void];
@@ -19,7 +17,7 @@ type SelectedParticipantProviderProps = {
 
 export function SelectedParticipantProvider({ room, children }: SelectedParticipantProviderProps) {
   const [selectedParticipant, _setSelectedParticipant] = useState<Participant | null>(null);
-  const setSelectedParticipant = (participant: Participant) => _setSelectedParticipant((prevParticipant) => (prevParticipant === participant ? null : participant));
+  const setSelectedParticipant = (participant: Participant) => _setSelectedParticipant(prevParticipant => (prevParticipant === participant ? null : participant));
 
   useEffect(() => {
     const onDisconnect = () => _setSelectedParticipant(null);
@@ -29,9 +27,5 @@ export function SelectedParticipantProvider({ room, children }: SelectedParticip
     };
   }, [room]);
 
-  return (
-    <selectedParticipantContext.Provider value={[selectedParticipant, setSelectedParticipant]}>
-      {children}
-    </selectedParticipantContext.Provider>
-  );
+  return <selectedParticipantContext.Provider value={[selectedParticipant, setSelectedParticipant]}>{children}</selectedParticipantContext.Provider>;
 }

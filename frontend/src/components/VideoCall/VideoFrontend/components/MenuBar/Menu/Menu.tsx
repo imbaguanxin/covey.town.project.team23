@@ -18,9 +18,9 @@ export default function Menu(props: { buttonClassName?: string }) {
 
   return (
     <>
-        <MenuItem onClick={() => setSettingsOpen(true)}>
-          <Typography variant="body1">A/V Settings</Typography>
-        </MenuItem>
+      <MenuItem onClick={() => setSettingsOpen(true)}>
+        <Typography variant='body1'>A/V Settings</Typography>
+      </MenuItem>
       <DeviceSelectionDialog
         open={settingsOpen}
         onClose={() => {

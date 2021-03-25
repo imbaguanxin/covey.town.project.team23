@@ -95,9 +95,7 @@ export interface ResponseEnvelope<T> {
  *
  * @param requestData an object representing the player's request
  */
-export async function townJoinHandler(
-  requestData: TownJoinRequest,
-): Promise<ResponseEnvelope<TownJoinResponse>> {
+export async function townJoinHandler(requestData: TownJoinRequest): Promise<ResponseEnvelope<TownJoinResponse>> {
   const townsStore = CoveyTownsStore.getInstance();
 
   const coveyTownController = townsStore.getControllerForTown(requestData.coveyTownID);
@@ -131,9 +129,7 @@ export async function townListHandler(): Promise<ResponseEnvelope<TownListRespon
   };
 }
 
-export async function townCreateHandler(
-  requestData: TownCreateRequest,
-): Promise<ResponseEnvelope<TownCreateResponse>> {
+export async function townCreateHandler(requestData: TownCreateRequest): Promise<ResponseEnvelope<TownCreateResponse>> {
   const townsStore = CoveyTownsStore.getInstance();
   if (requestData.friendlyName.length === 0) {
     return {
@@ -151,36 +147,23 @@ export async function townCreateHandler(
   };
 }
 
-export async function townDeleteHandler(
-  requestData: TownDeleteRequest,
-): Promise<ResponseEnvelope<Record<string, null>>> {
+export async function townDeleteHandler(requestData: TownDeleteRequest): Promise<ResponseEnvelope<Record<string, null>>> {
   const townsStore = CoveyTownsStore.getInstance();
   const success = townsStore.deleteTown(requestData.coveyTownID, requestData.coveyTownPassword);
   return {
     isOK: success,
     response: {},
-    message: !success
-      ? 'Invalid password. Please double check your town update password.'
-      : undefined,
+    message: !success ? 'Invalid password. Please double check your town update password.' : undefined,
   };
 }
 
-export async function townUpdateHandler(
-  requestData: TownUpdateRequest,
-): Promise<ResponseEnvelope<Record<string, null>>> {
+export async function townUpdateHandler(requestData: TownUpdateRequest): Promise<ResponseEnvelope<Record<string, null>>> {
   const townsStore = CoveyTownsStore.getInstance();
-  const success = townsStore.updateTown(
-    requestData.coveyTownID,
-    requestData.coveyTownPassword,
-    requestData.friendlyName,
-    requestData.isPubliclyListed,
-  );
+  const success = townsStore.updateTown(requestData.coveyTownID, requestData.coveyTownPassword, requestData.friendlyName, requestData.isPubliclyListed);
   return {
     isOK: success,
     response: {},
-    message: !success
-      ? 'Invalid password or update values specified. Please double check your town update password.'
-      : undefined,
+    message: !success ? 'Invalid password or update values specified. Please double check your town update password.' : undefined,
   };
 }
 
@@ -192,8 +175,9 @@ export async function townUpdateHandler(
 export function townSubscriptionHandler(socket: Socket): void {
   // Parse the client's session token from the connection
   // For each player, the session token should be the same string returned by joinTownHandler
+  // console.log("try to subscribe town");
   const { token, coveyTownID } = socket.handshake.auth as { token: string; coveyTownID: string };
-
+  // console.log(`subscribe to: ${coveyTownID}`);
   const townController = CoveyTownsStore.getInstance().getControllerForTown(coveyTownID);
 
   if (townController === undefined) {

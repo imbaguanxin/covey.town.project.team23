@@ -1,20 +1,5 @@
 import React, { useCallback } from 'react';
-import {
-  Button,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Divider,
-  FormControl,
-  Grid,
-  InputLabel,
-  MenuItem,
-  Select,
-  TextField,
-  Theme,
-  Typography,
-} from '@material-ui/core';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Divider, FormControl, Grid, InputLabel, MenuItem, Select, TextField, Theme, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import { inputLabels, Settings } from '../../state/settings/settingsReducer';
 import { RenderDimensions } from '../../state/settings/renderDimensions';
@@ -23,8 +8,8 @@ import useRoomState from '../../hooks/useRoomState/useRoomState';
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
-    width: '600px',
-    minHeight: '400px',
+    'width': '600px',
+    'minHeight': '400px',
     [theme.breakpoints.down('xs')]: {
       width: 'calc(100vw - 32px)',
     },
@@ -41,8 +26,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   formControl: {
-    display: 'block',
-    margin: '1.5em 0',
+    'display': 'block',
+    'margin': '1.5em 0',
     '&:first-child': {
       margin: '0 0 1.5em 0',
     },
@@ -87,7 +72,7 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
       <DialogContent className={classes.container}>
         <Grid container spacing={2}>
           <Grid item xs={12}>
-            <Typography hidden={!isDisabled} variant="body2">
+            <Typography hidden={!isDisabled} variant='body2'>
               These settings cannot be changed when connected to a room.
             </Typography>
           </Grid>
@@ -101,12 +86,11 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
                 name={inputLabels.dominantSpeakerPriority}
                 label={inputLabels.dominantSpeakerPriority}
                 value={withDefault(settings.dominantSpeakerPriority)}
-                onChange={handleChange}
-              >
-                <MenuItem value="low">Low</MenuItem>
-                <MenuItem value="standard">Standard</MenuItem>
-                <MenuItem value="high">High</MenuItem>
-                <MenuItem value="default">Server Default</MenuItem>
+                onChange={handleChange}>
+                <MenuItem value='low'>Low</MenuItem>
+                <MenuItem value='standard'>Standard</MenuItem>
+                <MenuItem value='high'>High</MenuItem>
+                <MenuItem value='default'>Server Default</MenuItem>
               </Select>
             </FormControl>
 
@@ -118,12 +102,11 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
                 name={inputLabels.trackSwitchOffMode}
                 label={inputLabels.trackSwitchOffMode}
                 value={withDefault(settings.trackSwitchOffMode)}
-                onChange={handleChange}
-              >
-                <MenuItem value="predicted">Predicted</MenuItem>
-                <MenuItem value="detected">Detected</MenuItem>
-                <MenuItem value="disabled">Disabled</MenuItem>
-                <MenuItem value="default">Server Default</MenuItem>
+                onChange={handleChange}>
+                <MenuItem value='predicted'>Predicted</MenuItem>
+                <MenuItem value='detected'>Detected</MenuItem>
+                <MenuItem value='disabled'>Disabled</MenuItem>
+                <MenuItem value='default'>Server Default</MenuItem>
               </Select>
             </FormControl>
 
@@ -135,12 +118,11 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
                 name={inputLabels.bandwidthProfileMode}
                 label={inputLabels.bandwidthProfileMode}
                 value={withDefault(settings.bandwidthProfileMode)}
-                onChange={handleChange}
-              >
-                <MenuItem value="grid">Grid</MenuItem>
-                <MenuItem value="collaboration">Collaboration</MenuItem>
-                <MenuItem value="presentation">Presentation</MenuItem>
-                <MenuItem value="default">Server Default</MenuItem>
+                onChange={handleChange}>
+                <MenuItem value='grid'>Grid</MenuItem>
+                <MenuItem value='collaboration'>Collaboration</MenuItem>
+                <MenuItem value='presentation'>Presentation</MenuItem>
+                <MenuItem value='default'>Server Default</MenuItem>
               </Select>
             </FormControl>
 
@@ -149,8 +131,8 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
                 disabled={isDisabled}
                 fullWidth
                 id={inputLabels.maxTracks}
-                label="Max Tracks"
-                placeholder="Leave blank for no limit"
+                label='Max Tracks'
+                placeholder='Leave blank for no limit'
                 name={inputLabels.maxTracks}
                 value={withDefault(settings.maxTracks)}
                 onChange={handleNumberChange}
@@ -162,8 +144,8 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
                 disabled={isDisabled}
                 fullWidth
                 id={inputLabels.maxAudioBitrate}
-                label="Max Audio Bitrate"
-                placeholder="Leave blank for no limit"
+                label='Max Audio Bitrate'
+                placeholder='Leave blank for no limit'
                 name={inputLabels.maxAudioBitrate}
                 value={withDefault(settings.maxAudioBitrate)}
                 onChange={handleNumberChange}
@@ -181,8 +163,7 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
                 name={inputLabels.renderDimensionLow}
                 label={inputLabels.renderDimensionLow}
                 value={withDefault(settings.renderDimensionLow)}
-                onChange={handleChange}
-              >
+                onChange={handleChange}>
                 {RenderDimensionItems}
               </Select>
             </FormControl>
@@ -197,8 +178,7 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
                 name={inputLabels.renderDimensionStandard}
                 label={inputLabels.renderDimensionStandard}
                 value={withDefault(settings.renderDimensionStandard)}
-                onChange={handleChange}
-              >
+                onChange={handleChange}>
                 {RenderDimensionItems}
               </Select>
             </FormControl>
@@ -213,8 +193,7 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
                 name={inputLabels.renderDimensionHigh}
                 label={inputLabels.renderDimensionHigh}
                 value={withDefault(settings.renderDimensionHigh)}
-                onChange={handleChange}
-              >
+                onChange={handleChange}>
                 {RenderDimensionItems}
               </Select>
             </FormControl>
@@ -223,7 +202,7 @@ export default function ConnectionOptionsDialog({ open, onClose }: { open: boole
       </DialogContent>
       <Divider />
       <DialogActions>
-        <Button className={classes.button} color="primary" variant="contained" onClick={onClose}>
+        <Button className={classes.button} color='primary' variant='contained' onClick={onClose}>
           Done
         </Button>
       </DialogActions>

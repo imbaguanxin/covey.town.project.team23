@@ -11,15 +11,12 @@ type StyleProps = {
   presenting: 'presenting' | 'not presenting';
 };
 
-const useStyles = makeStyles<Theme, StyleProps>((theme) => ({
-  container: (props) => ({
+const useStyles = makeStyles<Theme, StyleProps>(theme => ({
+  container: props => ({
     position: 'relative',
     height: '100%',
     display: 'grid',
-    gridTemplateColumns:
-            props.preferredMode === 'sidebar' && props.presenting === 'not presenting'
-              ? '1fr'
-              : `1fr ${theme.sidebarWidth}px`,
+    gridTemplateColumns: props.preferredMode === 'sidebar' && props.presenting === 'not presenting' ? '1fr' : `1fr ${theme.sidebarWidth}px`,
     gridTemplateRows: '100%',
     [theme.breakpoints.down('sm')]: {
       gridTemplateColumns: '100%',

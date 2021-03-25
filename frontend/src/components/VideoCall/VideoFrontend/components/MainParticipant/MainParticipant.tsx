@@ -14,10 +14,7 @@ export default function MainParticipant() {
   const [selectedParticipant] = useSelectedParticipant();
   const screenShareParticipant = useScreenShareParticipant();
 
-  const videoPriority = (mainParticipant === selectedParticipant || mainParticipant === screenShareParticipant)
-    && mainParticipant !== localParticipant
-    ? 'high'
-    : null;
+  const videoPriority = (mainParticipant === selectedParticipant || mainParticipant === screenShareParticipant) && mainParticipant !== localParticipant ? 'high' : null;
 
   return (
     /* audio is disabled for this participant component because this participant's audio

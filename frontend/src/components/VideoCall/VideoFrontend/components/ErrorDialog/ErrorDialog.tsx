@@ -18,7 +18,7 @@ function ErrorDialog({ dismissError, error }: PropsWithChildren<ErrorDialogProps
   const enhancedMessage = enhanceMessage(message, code);
 
   return (
-    <Dialog open={error !== null} onClose={() => dismissError()} fullWidth maxWidth="xs">
+    <Dialog open={error !== null} onClose={() => dismissError()} fullWidth maxWidth='xs'>
       <DialogTitle>ERROR</DialogTitle>
       <DialogContent>
         <DialogContentText>{enhancedMessage}</DialogContentText>
@@ -32,7 +32,7 @@ function ErrorDialog({ dismissError, error }: PropsWithChildren<ErrorDialogProps
         )}
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => dismissError()} color="primary" autoFocus>
+        <Button onClick={() => dismissError()} color='primary' autoFocus>
           OK
         </Button>
       </DialogActions>

@@ -74,7 +74,6 @@ export function createSocketClient(
   });
   const invitationReceivePromise = new Promise<string>(resolve => {
     socket.on('invitedToTown', (coveyTownID: string) => {
-      console.log(`resolved with ${coveyTownID}`);
       resolve(coveyTownID);
     });
   });

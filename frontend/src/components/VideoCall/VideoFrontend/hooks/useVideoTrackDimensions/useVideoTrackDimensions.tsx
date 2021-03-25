@@ -16,7 +16,7 @@ export default function useVideoTrackDimensions(track?: TrackType) {
         track.off('dimensionsChanged', handleDimensionsChanged);
       };
     }
-    return () => { };
+    return () => {};
   }, [track]);
 
   return dimensions;

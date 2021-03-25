@@ -10,8 +10,8 @@ const app = Express();
 app.use(CORS());
 const server = http.createServer(app);
 
-addTownRoutes(server, app);
-addUserInvitationRoutes(server, app);
+const userSocketServer = addUserInvitationRoutes(server, app);
+const townSocketServer = addTownRoutes(server, app);
 
 server.listen(process.env.PORT || 8081, () => {
   const address = server.address() as AddressInfo;
@@ -21,3 +21,6 @@ server.listen(process.env.PORT || 8081, () => {
     const newTown = CoveyTownsStore.getInstance().createTown(process.env.DEMO_TOWN_ID, false);
   }
 });
+
+// const newTown = CoveyTownsStore.getInstance().createTown('DEMO TOWN', true);
+// console.log(`Demo town id: ${newTown.coveyTownID}`);

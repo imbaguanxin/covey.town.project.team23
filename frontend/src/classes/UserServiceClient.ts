@@ -1,37 +1,68 @@
 import assert from 'assert';
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
-// TODO: request/response types
-
+/**
+ * The format of a creating a user request
+ */
 export interface CreateUserBodyRequest {
+  // the username provided by user
   username: string;
 }
+
+/**
+ * The format of a creating user response. Client is using the userToken to create socket.
+ */
 export interface CreateUserBodyResponse {
   username: string;
   userID: string;
   userToken: string;
 }
+
+/**
+ * The format of a list current user request
+ */
 export interface ListUserBodyResponse {
   users: { username: string; userID: string }[];
 }
 
+/**
+ * The url param of a invitationID request
+ */
 export interface GetInvitationIDBodyRequest {
   townID: string;
 }
+
+/**
+ * The format of a invitationID response
+ */
 export interface GetInvitationIDBodyResponse {
   invitationID: string;
 }
 
+/**
+ * The format of inviting a in system user to a town request
+ */
 export interface InviteUserInSystemBodyRequest {
   coveyTownID: string;
   invitedUserID: string;
 }
+
+/**
+ * The format of inviting a in system user to a town response
+ */
 export interface InviteUserInSystemBodyResponse {
   invitationSent: boolean;
 }
+
+/**
+ * The url param of join as a outside user request
+ */
 export interface JoinInvitationBodyRequest {
   invitationID: string;
 }
+/**
+ * The format of join as a outside user response
+ */
 export interface JoinInvitationBodyResponse {
   conveyTownID: string;
   friendlyName: string;
@@ -45,7 +76,6 @@ export interface ResponseEnvelope<T> {
   message?: string;
   response?: T;
 }
-
 export default class UserServiceClient {
   private _axios: AxiosInstance;
 

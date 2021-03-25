@@ -7,16 +7,16 @@ import { getInvitationLinkHandler, joinLinkHandler } from '../requestHandlers/Us
 import addTownsRoutes from '../router/towns';
 import addUserInvitationRoutes from '../router/userInvitations';
 import TownsServiceClient, { ResponseEnvelope, TownCreateResponse } from './TownsServiceClient';
-import UserServiceClient from './UsersInvitationClient';
+import UserServiceClient from './UserServiceClient';
 
 function unwrapResponse<T>(response: ResponseEnvelope<T>): T {
-  if (response === undefined || response.response === undefined){
+  if (response === undefined || response.response === undefined) {
     throw new Error(`Error processing request: ${response.message}`);
   }
   assert(response.response);
   return response.response;
 }
-  
+
 describe('UserInvitationServiceAPIREST', () => {
   /* A testing server that will be deployed before testing and reused throughout all of the tests */
   let server: http.Server;

@@ -74,17 +74,20 @@ export default function VideoGrid(props: Props) {
     unmountRef.current = () => {
       stop();
     };
-    unloadRef.current = (ev) => {
+    unloadRef.current = ev => {
       ev.preventDefault();
       stop();
     };
   }, [room, roomState, stopAudio, stopVideo]);
 
-  useEffect(() => () => {
-    if (unmountRef && unmountRef.current) {
-      unmountRef.current();
-    }
-  }, []);
+  useEffect(
+    () => () => {
+      if (unmountRef && unmountRef.current) {
+        unmountRef.current();
+      }
+    },
+    [],
+  );
 
   useEffect(() => {
     if (unloadRef && unloadRef.current) {
@@ -96,10 +99,7 @@ export default function VideoGrid(props: Props) {
   }, []);
 
   useEffect(() => {
-    if (
-      existingRoomRef.current
-            && (room.sid !== existingRoomRef.current.sid || coveyRoom !== existingRoomRef.current.sid)
-    ) {
+    if (existingRoomRef.current && (room.sid !== existingRoomRef.current.sid || coveyRoom !== existingRoomRef.current.sid)) {
       if (existingRoomRef.current.state === 'connected') {
         existingRoomRef.current.disconnect();
       }
@@ -116,10 +116,10 @@ export default function VideoGrid(props: Props) {
 
   return (
     <>
-      <Prompt when={roomState !== 'disconnected'} message="Are you sure you want to leave the video room?" />
-      <Container style={{ height: '100%' }} className="video-grid">
+      <Prompt when={roomState !== 'disconnected'} message='Are you sure you want to leave the video room?' />
+      <Container style={{ height: '100%' }} className='video-grid'>
         {roomState === 'disconnected' ? (
-        // <PreJoinScreens room={{id: coveyRoom, twilioID: coveyRoom}} setMediaError={setMediaError} />
+          // <PreJoinScreens room={{id: coveyRoom, twilioID: coveyRoom}} setMediaError={setMediaError} />
           <div>Error</div>
         ) : (
           <Main style={{ paddingBottom: '90px' }}>

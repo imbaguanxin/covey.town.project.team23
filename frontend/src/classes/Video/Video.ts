@@ -90,10 +90,7 @@ export default class Video {
             await doTeardown();
           })
           .catch(async err => {
-            this.logger.warn(
-              "Ignoring video initialisation error as we're teraing down anyway.",
-              err,
-            );
+            this.logger.warn("Ignoring video initialisation error as we're teraing down anyway.", err);
             await doTeardown();
           });
       } else {

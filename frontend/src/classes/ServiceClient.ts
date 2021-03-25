@@ -1,5 +1,5 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import assert from 'assert';
+import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import { ServerPlayer } from './Player';
 
 /**
@@ -77,6 +77,82 @@ export interface TownUpdateRequest {
 }
 
 /**
+ * The format of a creating a user request
+ */
+export interface CreateUserBodyRequest {
+  // the username provided by user
+  username: string;
+}
+
+/**
+ * The format of a creating user response. Client is using the userToken to create socket.
+ */
+export interface CreateUserBodyResponse {
+  username: string;
+  userID: string;
+  userToken: string;
+}
+
+/**
+ * The format of a list current user request
+ */
+export interface ListUserBodyResponse {
+  users: { username: string; userID: string }[];
+}
+
+/**
+ * The url param of a invitationID request
+ */
+export interface GetInvitationIDBodyRequest {
+  townID: string;
+}
+
+/**
+ * The format of a invitationID response
+ */
+export interface GetInvitationIDBodyResponse {
+  invitationID: string;
+}
+
+/**
+ * The format of inviting a in system user to a town request
+ */
+export interface InviteUserInSystemBodyRequest {
+  coveyTownID: string;
+  invitedUserID: string;
+}
+
+/**
+ * The format of inviting a in system user to a town response
+ */
+export interface InviteUserInSystemBodyResponse {
+  invitationSent: boolean;
+}
+
+/**
+ * The url param of join as a outside user request
+ */
+export interface JoinInvitationBodyRequest {
+  invitationID: string;
+}
+/**
+ * The format of join as a outside user response
+ */
+export interface JoinInvitationBodyResponse {
+  conveyTownID: string;
+  friendlyName: string;
+}
+
+/**
+ * Envelope that wraps any response from the server
+ */
+export interface ResponseEnvelope<T> {
+  isOK: boolean;
+  message?: string;
+  response?: T;
+}
+
+/**
  * Envelope that wraps any response from the server
  */
 export interface ResponseEnvelope<T> {
@@ -92,11 +168,11 @@ export type CoveyTownInfo = {
   maximumOccupancy: number;
 };
 
-export default class TownsServiceClient {
+export default class ServiceClient {
   private _axios: AxiosInstance;
 
   /**
-   * Construct a new Towns Service API client. Specify a serviceURL for testing, or otherwise
+   * Construct a Service API client. Specify a serviceURL for testing, or otherwise
    * defaults to the URL at the environmental variable REACT_APP_ROOMS_SERVICE_URL
    * @param serviceURL
    */
@@ -119,26 +195,51 @@ export default class TownsServiceClient {
 
   async createTown(requestData: TownCreateRequest): Promise<TownCreateResponse> {
     const responseWrapper = await this._axios.post<ResponseEnvelope<TownCreateResponse>>('/towns', requestData);
-    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+    return ServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
   async updateTown(requestData: TownUpdateRequest): Promise<void> {
     const responseWrapper = await this._axios.patch<ResponseEnvelope<void>>(`/towns/${requestData.coveyTownID}`, requestData);
-    return TownsServiceClient.unwrapOrThrowError(responseWrapper, true);
+    return ServiceClient.unwrapOrThrowError(responseWrapper, true);
   }
 
   async deleteTown(requestData: TownDeleteRequest): Promise<void> {
     const responseWrapper = await this._axios.delete<ResponseEnvelope<void>>(`/towns/${requestData.coveyTownID}/${requestData.coveyTownPassword}`);
-    return TownsServiceClient.unwrapOrThrowError(responseWrapper, true);
+    return ServiceClient.unwrapOrThrowError(responseWrapper, true);
   }
 
   async listTowns(): Promise<TownListResponse> {
     const responseWrapper = await this._axios.get<ResponseEnvelope<TownListResponse>>('/towns');
-    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+    return ServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
   async joinTown(requestData: TownJoinRequest): Promise<TownJoinResponse> {
     const responseWrapper = await this._axios.post('/sessions', requestData);
-    return TownsServiceClient.unwrapOrThrowError(responseWrapper);
+    return ServiceClient.unwrapOrThrowError(responseWrapper);
+  }
+
+  async createUser(requestData: CreateUserBodyRequest): Promise<CreateUserBodyResponse> {
+    const responseWrapper = await this._axios.post<ResponseEnvelope<CreateUserBodyResponse>>('/user', requestData);
+    return ServiceClient.unwrapOrThrowError(responseWrapper);
+  }
+
+  async listUsers(): Promise<ListUserBodyResponse> {
+    const responseWrapper = await this._axios.get<ResponseEnvelope<ListUserBodyResponse>>('/user');
+    return ServiceClient.unwrapOrThrowError(responseWrapper);
+  }
+
+  async getInvitationIDOfTown(requestData: GetInvitationIDBodyRequest): Promise<GetInvitationIDBodyResponse> {
+    const responseWrapper = await this._axios.get<ResponseEnvelope<GetInvitationIDBodyResponse>>(`/invitation/${requestData.townID}`);
+    return ServiceClient.unwrapOrThrowError(responseWrapper);
+  }
+
+  async inviteUserInSystem(requestData: InviteUserInSystemBodyRequest): Promise<InviteUserInSystemBodyResponse> {
+    const responseWrapper = await this._axios.post<ResponseEnvelope<InviteUserInSystemBodyResponse>>('/invitation', requestData);
+    return ServiceClient.unwrapOrThrowError(responseWrapper);
+  }
+
+  async joinUsingUrl(requestData: JoinInvitationBodyRequest): Promise<JoinInvitationBodyResponse> {
+    const responseWrapper = await this._axios.get<ResponseEnvelope<JoinInvitationBodyResponse>>(`/joinInvitation/${requestData.invitationID}`);
+    return ServiceClient.unwrapOrThrowError(responseWrapper);
   }
 }

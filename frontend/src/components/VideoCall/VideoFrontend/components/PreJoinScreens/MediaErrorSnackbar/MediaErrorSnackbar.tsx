@@ -23,20 +23,12 @@ export function getSnackbarContent(hasAudio: boolean, hasVideo: boolean, error?:
             Learn how to enable audio and video in your browser:
             <ul style={{ marginTop: '0.4em' }}>
               <li>
-                <a
-                  href="https://support.google.com/chrome/answer/2693767"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href='https://support.google.com/chrome/answer/2693767' target='_blank' rel='noopener noreferrer'>
                   Google Chrome
                 </a>
               </li>
               <li>
-                <a
-                  href="https://support.mozilla.org/en-US/kb/how-manage-your-camera-and-microphone-permissions"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
+                <a href='https://support.mozilla.org/en-US/kb/how-manage-your-camera-and-microphone-permissions' target='_blank' rel='noopener noreferrer'>
                   Mozilla Firefox
                 </a>
               </li>
@@ -47,14 +39,14 @@ export function getSnackbarContent(hasAudio: boolean, hasVideo: boolean, error?:
 
       break;
 
-      // This error is emitted when input devices are not connected or disabled in the OS settings
+    // This error is emitted when input devices are not connected or disabled in the OS settings
     case error?.name === 'NotFoundError':
       headline = 'Cannot Find Microphone or Camera:';
       message = 'The browser cannot access the microphone or camera. Please make sure all input devices are connected and enabled.';
       break;
 
-      // Other getUserMedia errors are less likely to happen in this app. Here we will display
-      // the system's error message directly to the user.
+    // Other getUserMedia errors are less likely to happen in this app. Here we will display
+    // the system's error message directly to the user.
     case Boolean(error):
       headline = 'Error Acquiring Media:';
       message = `${error!.name} ${error!.message}`;
@@ -101,7 +93,7 @@ export default function MediaErrorSnackbar({ error, dismissError }: { error?: Er
       }}
       headline={headline}
       message={message}
-      variant="warning"
+      variant='warning'
     />
   );
 }
