@@ -6,7 +6,8 @@ import { BrowserRouter } from 'react-router-dom';
 import { io, Socket } from 'socket.io-client';
 import './App.css';
 import Player, { ServerPlayer, UserLocation } from './classes/Player';
-import TownsServiceClient, { TownJoinResponse } from './classes/TownsServiceClient';
+import ServiceClient from './classes/ServiceClient';
+import { TownJoinResponse } from './classes/TownsServiceClient';
 import Video from './classes/Video/Video';
 import UserInvitation from './components/Invitation/UserInvitation';
 import Login from './components/Login/Login';
@@ -43,7 +44,11 @@ type CoveyAppUpdate =
   | { action: 'playerMoved'; player: Player }
   | { action: 'playerDisconnect'; player: Player }
   | { action: 'weMoved'; location: UserLocation }
-  | { action: 'disconnect' };
+  | { action: 'disconnect' }
+  | { action: 'login'; data: { userName: string; userID: string; userToken: string } }
+  | { action: 'receivedInvitation'; coveyRoomID: string }
+  | { action: 'acceptInvitation'; coveyRoomID: string }
+  | { action: 'denyInvitation'; coveyRoomID: string };
 
 function defaultAppState(): CoveyAppState {
   return {
@@ -55,7 +60,10 @@ function defaultAppState(): CoveyAppState {
     currentTownIsPubliclyListed: false,
     sessionToken: '',
     userName: '',
+    myUserID: '',
+    myUserToken: '',
     socket: null,
+    invitationSocket: null,
     currentLocation: {
       x: 0,
       y: 0,
@@ -63,11 +71,14 @@ function defaultAppState(): CoveyAppState {
       moving: false,
     },
     emitMovement: () => {},
-    apiClient: new TownsServiceClient(),
+    apiClient: new ServiceClient(),
   };
 }
 function appStateReducer(state: CoveyAppState, update: CoveyAppUpdate): CoveyAppState {
   const nextState = {
+    userName: state.userName,
+    myUserID: state.myUserID,
+    myUserToken: state.myUserToken,
     sessionToken: state.sessionToken,
     currentTownFriendlyName: state.currentTownFriendlyName,
     currentTownID: state.currentTownID,
@@ -76,8 +87,8 @@ function appStateReducer(state: CoveyAppState, update: CoveyAppUpdate): CoveyApp
     players: state.players,
     currentLocation: state.currentLocation,
     nearbyPlayers: state.nearbyPlayers,
-    userName: state.userName,
     socket: state.socket,
+    invitationSocket: state.invitationSocket,
     emitMovement: state.emitMovement,
     apiClient: state.apiClient,
   };
@@ -149,12 +160,33 @@ function appStateReducer(state: CoveyAppState, update: CoveyAppUpdate): CoveyApp
     case 'disconnect':
       state.socket?.disconnect();
       return defaultAppState();
+    // TODO 'login'
+    case 'login':
+      throw new Error('Unimplemented');
+      break;
+    // TODO 'receivedInvitation'
+    case 'receivedInvitation':
+      throw new Error('Unimplemented');
+      break;
+    // TODO 'acceptInvitation'
+    case 'acceptInvitation':
+      throw new Error('Unimplemented');
+      break;
+    // TODO 'denyInvitation'
+    case 'denyInvitation':
+      throw new Error('Unimplemented');
+      break;
     default:
       throw new Error('Unexpected state request');
   }
 
   return nextState;
 }
+
+// TODO: userInvitation controller
+// async function invitationController(initData: CreateUserBodyResponse, dispatchAppUpdate:(update: CoveyAppState) => void) {
+
+// }
 
 async function GameController(initData: TownJoinResponse, dispatchAppUpdate: (update: CoveyAppUpdate) => void) {
   // Now, set up the game sockets
@@ -209,7 +241,8 @@ async function GameController(initData: TownJoinResponse, dispatchAppUpdate: (up
 
 function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefined>> }) {
   const [appState, dispatchAppUpdate] = useReducer(appStateReducer, defaultAppState());
-
+  // TODO : setup invitation controller
+  // const setupInvitationController
   const setupGameController = useCallback(
     async (initData: TownJoinResponse) => {
       await GameController(initData, dispatchAppUpdate);
@@ -229,6 +262,7 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
   }, [dispatchAppUpdate, setOnDisconnect]);
 
   const page = useMemo(() => {
+    // TODO : setup invitation controller
     if (!appState.sessionToken) {
       return <Login doLogin={setupGameController} />;
     }
