@@ -2,6 +2,7 @@ import { Socket } from 'socket.io';
 import { CoveyCreateUser, CoveyUser, CoveyUserList } from '../CoveyTypes';
 import ActiveUser from '../types/ActiveUser';
 import CoveyInvitationListener from '../types/CoveyInvitationListener';
+import CoveyTownsStore from './CoveyTownsStore';
 
 function socketAdapter(socket: Socket, userID: string): CoveyInvitationListener {
   return {
@@ -81,6 +82,10 @@ export default class CoveyUserController {
     }
     const userSocket = this._listeners.find(listener => listener.getUserID() === userID);
     if (userSocket === undefined) {
+      return false;
+    }
+    const roomController = CoveyTownsStore.getInstance().getControllerForTown(coveyTownID);
+    if (roomController === undefined) {
       return false;
     }
     userSocket.onInvited(coveyTownID);
