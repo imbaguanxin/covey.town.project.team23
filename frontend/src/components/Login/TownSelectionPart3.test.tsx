@@ -5,7 +5,7 @@ import { fireEvent, render, RenderResult, waitFor } from '@testing-library/react
 import userEvent, { TargetElement } from '@testing-library/user-event';
 import { nanoid } from 'nanoid';
 import React from 'react';
-import TownsServiceClient from '../../classes/TownsServiceClient';
+import ServiceClient from '../../classes/ServiceClient';
 import Video from '../../classes/Video/Video';
 import CoveyAppContext from '../../contexts/CoveyAppContext';
 import TownSelection from './TownSelection';
@@ -13,7 +13,7 @@ import TownSelection from './TownSelection';
 const mockConnect = jest.fn(() => Promise.resolve());
 
 const mockToast = jest.fn();
-jest.mock('../../classes/TownsServiceClient');
+jest.mock('../../classes/ServiceClient');
 jest.mock('../../classes/Video/Video');
 jest.mock('../VideoCall/VideoFrontend/hooks/useVideoContext/useVideoContext.ts', () => ({
   __esModule: true, // this property makes it work
@@ -31,8 +31,8 @@ const doLoginMock = jest.fn();
 const mocklistTowns = jest.fn();
 const mockCreateTown = jest.fn();
 const mockVideoSetup = jest.fn();
-TownsServiceClient.prototype.listTowns = mocklistTowns;
-TownsServiceClient.prototype.createTown = mockCreateTown;
+ServiceClient.prototype.listTowns = mocklistTowns;
+ServiceClient.prototype.createTown = mockCreateTown;
 Video.setup = mockVideoSetup;
 const listTowns = (suffix: string) =>
   Promise.resolve({
@@ -95,15 +95,19 @@ function wrappedTownSelection() {
           currentTownFriendlyName: '',
           sessionToken: '',
           userName: '',
-          socket: null,
+          myUserID: '',
+          myUserToken: '',
+          townSocket: null,
+          invitationSocket: null,
           currentLocation: {
             x: 0,
             y: 0,
             rotation: 'front',
             moving: false,
           },
+          invitations: [],
           emitMovement: () => {},
-          apiClient: new TownsServiceClient(),
+          apiClient: new ServiceClient(),
         }}>
         <TownSelection doLogin={doLoginMock} />
       </CoveyAppContext.Provider>

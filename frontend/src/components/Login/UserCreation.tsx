@@ -1,7 +1,7 @@
-import { TownJoinResponse } from '../../classes/TownsServiceClient';
+import { CreateUserBodyResponse } from '../../classes/ServiceClient';
 
 interface UserCreationProps {
-  doLogin: (initData: TownJoinResponse) => Promise<boolean>;
+  doLogin: (initData: CreateUserBodyResponse) => Promise<boolean>;
 }
 
 export default function UserCreation({ doLogin }: UserCreationProps): JSX.Element {
