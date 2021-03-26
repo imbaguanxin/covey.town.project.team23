@@ -1,11 +1,10 @@
-import React from 'react';
 import { Heading, Text } from '@chakra-ui/react';
-import DeviceSelectionScreen from './DeviceSelectionScreen/DeviceSelectionScreen';
-import IntroContainer from '../IntroContainer/IntroContainer';
-import { TownJoinResponse } from '../../../../../classes/TownsServiceClient';
-import UserCreation from '../../../../Login/UserCreation';
-import TownSelection from '../../../../Login/TownSelection';
+import React from 'react';
+import { TownJoinResponse } from '../../../../../classes/ServiceClient';
 import useCoveyAppState from '../../../../../hooks/useCoveyAppState';
+import TownSelection from '../../../../Login/TownSelection';
+import IntroContainer from '../IntroContainer/IntroContainer';
+import DeviceSelectionScreen from './DeviceSelectionScreen/DeviceSelectionScreen';
 
 export default function PreJoinScreens(props: { doLogin: (initData: TownJoinResponse) => Promise<boolean>; setMediaError?(error: Error): void }) {
   const { userName } = useCoveyAppState();
@@ -20,7 +19,7 @@ export default function PreJoinScreens(props: { doLogin: (initData: TownJoinResp
         out in, or join an existing one.
       </Text>
       <DeviceSelectionScreen setMediaError={props.setMediaError} />
-      {userName === '' ? <UserCreation doLogin={props.doLogin} /> : <TownSelection doLogin={props.doLogin} />}
+      <TownSelection doLogin={props.doLogin} />
     </IntroContainer>
   );
 }

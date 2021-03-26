@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { TownJoinResponse } from '../../classes/TownsServiceClient';
+import { TownJoinResponse } from '../../classes/ServiceClient';
 import MediaErrorSnackbar from '../VideoCall/VideoFrontend/components/PreJoinScreens/MediaErrorSnackbar/MediaErrorSnackbar';
 import PreJoinScreens from '../VideoCall/VideoFrontend/components/PreJoinScreens/PreJoinScreens';
 

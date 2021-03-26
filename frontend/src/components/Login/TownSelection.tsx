@@ -1,7 +1,7 @@
 import { Box, Button, Checkbox, Flex, FormControl, FormLabel, Heading, Input, Stack, Table, TableCaption, Tbody, Td, Th, Thead, Tr, useToast } from '@chakra-ui/react';
 import assert from 'assert';
 import React, { useCallback, useEffect, useState } from 'react';
-import { CoveyTownInfo, TownJoinResponse } from '../../classes/TownsServiceClient';
+import { CoveyTownInfo, TownJoinResponse } from '../../classes/ServiceClient';
 import Video from '../../classes/Video/Video';
 import useCoveyAppState from '../../hooks/useCoveyAppState';
 import useVideoContext from '../VideoCall/VideoFrontend/hooks/useVideoContext/useVideoContext';

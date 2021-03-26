@@ -12,7 +12,7 @@ import useVideoContext from '../../../hooks/useVideoContext/useVideoContext';
 import { VideoRoom } from '../../../../../../CoveyTypes';
 
 import Video from '../../../../../../classes/Video/Video';
-import { TownJoinResponse } from '../../../../../../classes/TownsServiceClient';
+import { TownJoinResponse } from '../../../../../../classes/ServiceClient';
 
 const useStyles = makeStyles((theme: Theme) => ({
   gutterBottom: {
