@@ -47,22 +47,8 @@ type CoveyAppUpdate =
   | { action: 'disconnect' }
   | { action: 'login'; data: { userName: string; userID: string; userToken: string; invitationSocket: Socket } }
   | { action: 'receivedInvitation'; coveyTownID: string }
-  // AccceptInvitation similar to do connect?
-  | {
-      action: 'acceptInvitation';
-      data: {
-        townFriendlyName: string;
-        townID: string;
-        townIsPubliclyListed: boolean;
-        sessionToken: string;
-        myPlayerID: string;
-        townSocket: Socket;
-        players: Player[];
-        emitMovement: (location: UserLocation) => void;
-      };
-    }
   // | { action: 'acceptInvitation'; coveyTownID: string }
-  | { action: 'denyInvitation'; coveyTownID: string };
+  | { action: 'deleteInvitation'; coveyTownID: string };
 
 function goRoomListState(oldState: CoveyAppState): CoveyAppState {
   return {
@@ -163,7 +149,6 @@ function appStateReducer(state: CoveyAppState, update: CoveyAppUpdate): CoveyApp
       nextState.currentTownFriendlyName = update.data.townFriendlyName;
       nextState.currentTownID = update.data.townID;
       nextState.currentTownIsPubliclyListed = update.data.townIsPubliclyListed;
-      // nextState.userName = update.data.userName;
       nextState.emitMovement = update.data.emitMovement;
       nextState.townSocket = update.data.townSocket;
       nextState.players = update.data.players;
@@ -203,7 +188,6 @@ function appStateReducer(state: CoveyAppState, update: CoveyAppUpdate): CoveyApp
       state.townSocket?.disconnect();
       state.invitationSocket?.disconnect();
       return defaultAppState();
-
     case 'goRoomList':
       state.townSocket?.disconnect();
       return goRoomListState(nextState);
@@ -213,29 +197,18 @@ function appStateReducer(state: CoveyAppState, update: CoveyAppUpdate): CoveyApp
       nextState.myUserToken = update.data.userToken;
       nextState.userName = update.data.userName;
       nextState.invitationSocket = update.data.invitationSocket;
-      // throw new Error('Unimplemented');
       break;
     // TODO 'receivedInvitation'
     case 'receivedInvitation':
-      nextState.invitations.push(update.coveyTownID);
-      break;
-    // TODO 'acceptInvitation'
-    case 'acceptInvitation':
-      nextState.invitations = nextState.invitations.filter(id => id !== update.data.townID);
-      nextState.sessionToken = update.data.sessionToken;
-      nextState.myPlayerID = update.data.myPlayerID;
-      nextState.currentTownFriendlyName = update.data.townFriendlyName;
-      nextState.currentTownID = update.data.townID;
-      nextState.currentTownIsPubliclyListed = update.data.townIsPubliclyListed;
-      nextState.emitMovement = update.data.emitMovement;
-      nextState.townSocket = update.data.townSocket;
-      nextState.players = update.data.players;
-      // throw new Error('Unimplemented');
+      if (nextState.currentTownID !== update.coveyTownID) {
+        if (!nextState.invitations.find(townID => townID === update.coveyTownID)) {
+          nextState.invitations.push(update.coveyTownID);
+        }
+      }
       break;
     // TODO 'denyInvitation'
-    case 'denyInvitation':
-      nextState.invitations.filter(id => id !== update.coveyTownID);
-      // throw new Error('Unimplemented');
+    case 'deleteInvitation':
+      nextState.invitations = nextState.invitations.filter(id => id !== update.coveyTownID);
       break;
     default:
       throw new Error('Unexpected state request');
@@ -244,7 +217,6 @@ function appStateReducer(state: CoveyAppState, update: CoveyAppUpdate): CoveyApp
   return nextState;
 }
 
-// TODO: userInvitation controller
 async function invitationController(initData: CreateUserBodyResponse, dispatchAppUpdate: (update: CoveyAppUpdate) => void) {
   const username = initData.username;
   const userID = initData.userID;
@@ -307,7 +279,6 @@ async function GameController(initData: TownJoinResponse, dispatchAppUpdate: (up
     action: 'doConnect',
     data: {
       sessionToken,
-      // userName: video.userName,
       townFriendlyName: townName,
       townID: video.coveyTownID,
       myPlayerID: gamePlayerID,
