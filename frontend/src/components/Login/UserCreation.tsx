@@ -12,18 +12,21 @@ export default function UserCreation({ doLogin }: UserCreationProps): JSX.Elemen
   const { apiClient } = useCoveyAppState();
   const toast = useToast();
 
-  const handleCreateUser = useCallback(async (username: string) => {
-    try {
-      const createUserResponse = await apiClient.createUser({ username });
-      await doLogin(createUserResponse);
-    } catch (err) {
-      toast({
-        title: `Unable to create user: ${username}`,
-        description: err.toString(),
-        status: 'error',
-      });
-    }
-  }, [doLogin, toast, apiClient]);
+  const handleCreateUser = useCallback(
+    async (username: string) => {
+      try {
+        const createUserResponse = await apiClient.createUser({ username });
+        await doLogin(createUserResponse);
+      } catch (err) {
+        toast({
+          title: `Unable to create user: ${username}`,
+          description: err.toString(),
+          status: 'error',
+        });
+      }
+    },
+    [doLogin, toast, apiClient],
+  );
 
   return (
     <Center>
@@ -62,7 +65,7 @@ export default function UserCreation({ doLogin }: UserCreationProps): JSX.Elemen
                 w='full'
                 bgGradient='linear(to-r, red.400,pink.400)'
                 color='white'
-                onClick= {() => handleCreateUser(newUserName)}
+                onClick={() => handleCreateUser(newUserName)}
                 _hover={{
                   bgGradient: 'linear(to-r, red.400,pink.400)',
                   boxShadow: 'xl',
