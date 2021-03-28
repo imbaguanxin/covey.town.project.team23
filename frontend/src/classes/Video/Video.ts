@@ -1,5 +1,5 @@
 import DebugLogger from '../DebugLogger';
-import TownsServiceClient, { TownJoinResponse } from '../ServiceClient';
+import ServiceClient, { TownJoinResponse } from '../ServiceClient';
 
 export default class Video {
   private static video: Video | null = null;
@@ -16,7 +16,7 @@ export default class Video {
 
   private _userName: string;
 
-  private townsServiceClient: TownsServiceClient = new TownsServiceClient();
+  private serviceClient: ServiceClient = new ServiceClient();
 
   private _coveyTownID: string;
 
@@ -56,7 +56,7 @@ export default class Video {
     if (!this.initialisePromise) {
       this.initialisePromise = new Promise((resolve, reject) => {
         // Request our token to join the town
-        this.townsServiceClient
+        this.serviceClient
           .joinTown({
             coveyTownID: this._coveyTownID,
             userName: this._userName,

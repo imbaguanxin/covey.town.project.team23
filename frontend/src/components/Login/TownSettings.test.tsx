@@ -6,7 +6,6 @@ import { TargetElement } from '@testing-library/user-event';
 import { nanoid } from 'nanoid';
 import React from 'react';
 import ServiceClient from '../../classes/ServiceClient';
-import TownsServiceClient from '../../classes/TownsServiceClient';
 import CoveyAppContext from '../../contexts/CoveyAppContext';
 import TownSettings from './TownSettings';
 

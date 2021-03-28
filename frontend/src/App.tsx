@@ -46,7 +46,7 @@ type CoveyAppUpdate =
   | { action: 'goRoomList' }
   | { action: 'disconnect' }
   | { action: 'login'; data: { userName: string; userID: string; userToken: string; invitationSocket: Socket } }
-  | { action: 'receivedInvitation'; coveyTownID: string }
+  | { action: 'receivedInvitation'; coveyTownID: string; friendlyName: string }
   // | { action: 'acceptInvitation'; coveyTownID: string }
   | { action: 'deleteInvitation'; coveyTownID: string };
 
@@ -201,14 +201,14 @@ function appStateReducer(state: CoveyAppState, update: CoveyAppUpdate): CoveyApp
     // TODO 'receivedInvitation'
     case 'receivedInvitation':
       if (nextState.currentTownID !== update.coveyTownID) {
-        if (!nextState.invitations.find(townID => townID === update.coveyTownID)) {
-          nextState.invitations.push(update.coveyTownID);
+        if (!nextState.invitations.find(town => town.coveyTownID === update.coveyTownID)) {
+          nextState.invitations.push({ coveyTownID: update.coveyTownID, friendlyName: update.friendlyName });
         }
       }
       break;
     // TODO 'denyInvitation'
     case 'deleteInvitation':
-      nextState.invitations = nextState.invitations.filter(id => id !== update.coveyTownID);
+      nextState.invitations = nextState.invitations.filter(town => town.coveyTownID !== update.coveyTownID);
       break;
     default:
       throw new Error('Unexpected state request');
@@ -224,10 +224,11 @@ async function loginController(initData: CreateUserBodyResponse, dispatchAppUpda
 
   const socket = io(url, { path: '/user', auth: { token: userToken, userID } });
 
-  socket.on('invitedToTown', (townID: string) => {
+  socket.on('invitedToTown', (invitation: { coveyTownID: string; friendlyName: string }) => {
     dispatchAppUpdate({
       action: 'receivedInvitation',
-      coveyTownID: townID,
+      coveyTownID: invitation.coveyTownID,
+      friendlyName: invitation.friendlyName,
     });
   });
 

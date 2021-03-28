@@ -12,7 +12,6 @@ interface TownSelectionProps {
 
 export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Element {
   // Todo, need to change user name to the real username from app state. 
-  // const [userName, setUserName] = useState<string>(Video.instance()?.userName || '');
   const [newTownName, setNewTownName] = useState<string>('');
   const [newTownIsPublic, setNewTownIsPublic] = useState<boolean>(true);
   const [townIDToJoin, setTownIDToJoin] = useState<string>('');
@@ -23,7 +22,6 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
   const toast = useToast();
 
   const updateTownListings = useCallback(() => {
-    // console.log(apiClient);
     apiClient.listTowns().then(towns => {
       setCurrentPublicTowns(towns.towns.sort((a, b) => b.currentOccupancy - a.currentOccupancy));
     });

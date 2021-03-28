@@ -1,7 +1,30 @@
 import { CheckIcon, CloseIcon, TriangleDownIcon } from '@chakra-ui/icons';
-import { Box, Button, Drawer, DrawerBody, DrawerContent, DrawerHeader, DrawerOverlay, Flex, HStack, SimpleGrid, Table, Td, Th, Thead, Tr, useColorModeValue, useDisclosure } from '@chakra-ui/react';
-import React from 'react';
+import {
+  Box,
+  Button,
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
+  Flex,
+  HStack,
+  SimpleGrid,
+  Table,
+  Td,
+  Th,
+  Thead,
+  Tr,
+  useColorModeValue,
+  useDisclosure,
+  useToast,
+} from '@chakra-ui/react';
+import assert from 'assert';
+import React, { useCallback } from 'react';
 import { TownJoinResponse } from '../../classes/ServiceClient';
+import Video from '../../classes/Video/Video';
+import useCoveyAppState from '../../hooks/useCoveyAppState';
+import useVideoContext from '../VideoCall/VideoFrontend/hooks/useVideoContext/useVideoContext';
 
 interface InvitationProps {
   doLogin: (initData: TownJoinResponse) => Promise<boolean>;
@@ -10,27 +33,63 @@ interface InvitationProps {
 
 export function TownLink({ doLogin, deleteInvitation }: InvitationProps): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { connect } = useVideoContext();
 
-  // const { invitations, apiClient } = useCoveyAppState();
+  const { invitations, userName } = useCoveyAppState();
 
-  const invitations = ['testID1', 'testID2'];
+  const toast = useToast();
 
-  const renderTown = (townID: string) => (
-      <Tr>
-        <Td>room 1</Td>
-        <Td>{townID}</Td>
-        <Td>
-          <SimpleGrid columns={2} spacing='40px'>
-            <Button leftIcon={<CheckIcon />} colorScheme='green' size='xs'>
-              accept
-            </Button>
-            <Button leftIcon={<CloseIcon />} colorScheme='red' size='xs'>
-              deny
-            </Button>
-          </SimpleGrid>
-        </Td>
-      </Tr>
-    );
+  const handleDelete = useCallback(
+    async (coveyRoomID: string) => {
+      try {
+        await deleteInvitation(coveyRoomID);
+      } catch (err) {
+        toast({
+          title: 'Unable to join town',
+          description: 'Please enter a town ID',
+          status: 'error',
+        });
+      }
+    },
+    [deleteInvitation, toast],
+  );
+
+  const handleAccept = useCallback(
+    async (coveyRoomID: string) => {
+      try {
+        const initData = await Video.setup(userName, coveyRoomID);
+        const loggedIn = await doLogin(initData);
+        if (loggedIn) {
+          assert(initData.providerVideoToken);
+          await connect(initData.providerVideoToken);
+        }
+      } catch (err) {
+        toast({
+          title: 'Unable to connect to Towns Service',
+          description: err.toString(),
+          status: 'error',
+        });
+      }
+    },
+    [toast, connect, doLogin, userName],
+  );
+
+  const renderTown = (townID: string, friendlyName: string) => (
+    <Tr>
+      <Td>{friendlyName}</Td>
+      <Td>{townID}</Td>
+      <Td>
+        <SimpleGrid columns={2} spacing='40px'>
+          <Button leftIcon={<CheckIcon />} colorScheme='green' size='xs' onClick={() => handleAccept(townID)}>
+            accept
+          </Button>
+          <Button leftIcon={<CloseIcon />} colorScheme='red' size='xs' onClick={() => handleDelete(townID)}>
+            deny
+          </Button>
+        </SimpleGrid>
+      </Td>
+    </Tr>
+  );
 
   return (
     <>
@@ -50,7 +109,7 @@ export function TownLink({ doLogin, deleteInvitation }: InvitationProps): JSX.El
                     <Th>Options</Th>
                   </Tr>
                 </Thead>
-                {invitations.map(id => renderTown(id))}
+                {invitations.map(town => renderTown(town.coveyTownID, town.friendlyName))}
               </Table>
             </DrawerBody>
           </DrawerContent>

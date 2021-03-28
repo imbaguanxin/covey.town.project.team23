@@ -30,6 +30,6 @@ export type CoveyAppState = {
   emitMovement: (location: UserLocation) => void;
   townSocket: Socket | null;
   invitationSocket: Socket | null;
-  invitations: string[];
+  invitations: { coveyTownID: string; friendlyName: string }[];
   apiClient: ServiceClient;
 };

@@ -12,8 +12,8 @@ function socketAdapter(socket: Socket, userID: string): CoveyInvitationListener 
     onDisconnect() {
       socket.disconnect();
     },
-    onInvited(coveyTownID: string) {
-      socket.emit('invitedToTown', coveyTownID.toString());
+    onInvited(coveyTownID: string, friendlyName: string) {
+      socket.emit('invitedToTown', { coveyTownID, friendlyName });
     },
   };
 }
@@ -84,11 +84,11 @@ export default class CoveyUserController {
     if (userSocket === undefined) {
       return false;
     }
-    const roomController = CoveyTownsStore.getInstance().getControllerForTown(coveyTownID);
-    if (roomController === undefined) {
+    const townController = CoveyTownsStore.getInstance().getControllerForTown(coveyTownID);
+    if (townController === undefined) {
       return false;
     }
-    userSocket.onInvited(coveyTownID);
+    userSocket.onInvited(coveyTownID, townController.friendlyName);
     return true;
   }
 
