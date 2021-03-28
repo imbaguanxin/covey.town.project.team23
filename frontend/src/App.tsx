@@ -218,13 +218,11 @@ function appStateReducer(state: CoveyAppState, update: CoveyAppUpdate): CoveyApp
 }
 
 async function invitationController(initData: CreateUserBodyResponse, dispatchAppUpdate: (update: CoveyAppUpdate) => void) {
-  const username = initData.username;
-  const userID = initData.userID;
-  const token = initData.userToken;
+  const { username, userID, userToken } = initData;
   const url = process.env.REACT_APP_TOWNS_SERVICE_URL;
   assert(url);
 
-  const socket = io(url, { path: '/user', auth: { token: token, userID: userID } });
+  const socket = io(url, { path: '/user', auth: { token: userToken, userID } });
 
   socket.on('invitedToTown', (townID: string) => {
     dispatchAppUpdate({
@@ -235,7 +233,7 @@ async function invitationController(initData: CreateUserBodyResponse, dispatchAp
 
   dispatchAppUpdate({
     action: 'login',
-    data: { userName: username, userID: userID, userToken: token, invitationSocket: socket },
+    data: { userName: username, userID, userToken, invitationSocket: socket },
   });
 
   return true;

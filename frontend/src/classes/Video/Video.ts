@@ -1,5 +1,5 @@
 import DebugLogger from '../DebugLogger';
-import TownsServiceClient, { TownJoinResponse } from '../TownsServiceClient';
+import TownsServiceClient, { TownJoinResponse } from '../ServiceClient';
 
 export default class Video {
   private static video: Video | null = null;

@@ -152,15 +152,6 @@ export interface ResponseEnvelope<T> {
   response?: T;
 }
 
-/**
- * Envelope that wraps any response from the server
- */
-export interface ResponseEnvelope<T> {
-  isOK: boolean;
-  message?: string;
-  response?: T;
-}
-
 export type CoveyTownInfo = {
   friendlyName: string;
   coveyTownID: string;
@@ -178,7 +169,7 @@ export default class ServiceClient {
    */
   constructor(serviceURL?: string) {
     const baseURL = serviceURL || process.env.REACT_APP_TOWNS_SERVICE_URL;
-    assert(baseURL);
+    // assert(baseURL);
     this._axios = axios.create({ baseURL });
   }
 
