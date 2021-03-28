@@ -29,14 +29,8 @@ describe('TownsServiceAPIREST', () => {
   let server: http.Server;
   let apiClient: TownsServiceClient;
 
-  async function createTownForTesting(
-    friendlyNameToUse?: string,
-    isPublic = false,
-  ): Promise<TestTownData> {
-    const friendlyName =
-      friendlyNameToUse !== undefined
-        ? friendlyNameToUse
-        : `${isPublic ? 'Public' : 'Private'}TestingTown=${nanoid()}`;
+  async function createTownForTesting(friendlyNameToUse?: string, isPublic = false): Promise<TestTownData> {
+    const friendlyName = friendlyNameToUse !== undefined ? friendlyNameToUse : `${isPublic ? 'Public' : 'Private'}TestingTown=${nanoid()}`;
     const ret = await apiClient.createTown({
       friendlyName,
       isPubliclyListed: isPublic,

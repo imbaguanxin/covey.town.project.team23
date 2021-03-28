@@ -5,12 +5,17 @@ export type UserLocation = {
   rotation: Direction;
   moving: boolean;
 };
-export type CoveyTownList = {
+export type CoveyTown = {
+  friendlyName: string;
+  coveyTownID: string;
+};
+export type CoveyTownWithCapcity = {
   friendlyName: string;
   coveyTownID: string;
   currentOccupancy: number;
   maximumOccupancy: number;
-}[];
+};
+export type CoveyTownList = CoveyTownWithCapcity[];
 export type CoveyUser = {
   username: string;
   userID: string;

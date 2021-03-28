@@ -48,12 +48,7 @@ export default class CoveyTownsStore {
     return newTown;
   }
 
-  updateTown(
-    coveyTownID: string,
-    coveyTownPassword: string,
-    friendlyName?: string,
-    makePublic?: boolean,
-  ): boolean {
+  updateTown(coveyTownID: string, coveyTownPassword: string, friendlyName?: string, makePublic?: boolean): boolean {
     const existingTown = this.getControllerForTown(coveyTownID);
     if (existingTown && passwordMatches(coveyTownPassword, existingTown.townUpdatePassword)) {
       if (friendlyName !== undefined) {
