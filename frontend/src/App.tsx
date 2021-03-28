@@ -217,7 +217,7 @@ function appStateReducer(state: CoveyAppState, update: CoveyAppUpdate): CoveyApp
   return nextState;
 }
 
-async function invitationController(initData: CreateUserBodyResponse, dispatchAppUpdate: (update: CoveyAppUpdate) => void) {
+async function loginController(initData: CreateUserBodyResponse, dispatchAppUpdate: (update: CoveyAppUpdate) => void) {
   const { username, userID, userToken } = initData;
   const url = process.env.REACT_APP_TOWNS_SERVICE_URL;
   assert(url);
@@ -292,9 +292,21 @@ async function GameController(initData: TownJoinResponse, dispatchAppUpdate: (up
 function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefined>> }) {
   const [appState, dispatchAppUpdate] = useReducer(appStateReducer, defaultAppState());
   // TODO : setup invitation controller
-  const setupInvitationController = useCallback(
+  const setupLoginController = useCallback(
     async (initData: CreateUserBodyResponse) => {
-      await invitationController(initData, dispatchAppUpdate);
+      await loginController(initData, dispatchAppUpdate);
+      return true;
+    },
+    [dispatchAppUpdate],
+  );
+
+  const setDeleteInvitation = useCallback(
+    async (coveyTownID: string) => {
+      async function deleteInvitation() {
+        dispatchAppUpdate({ action: 'deleteInvitation', coveyTownID });
+        return true;
+      }
+      await deleteInvitation();
       return true;
     },
     [dispatchAppUpdate],
@@ -321,12 +333,12 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
   const page = useMemo(() => {
     // TODO : setup invitation controller
     if (!appState.myUserToken) {
-      return <UserCreation doLogin={setupInvitationController} />;
+      return <UserCreation doLogin={setupLoginController} />;
     }
     if (!appState.sessionToken) {
       return (
         <div>
-          <UserInvitation doLogin={setupGameController} />
+          <UserInvitation doLogin={setupGameController} deleteInvitation={setDeleteInvitation} />
           <Login doLogin={setupGameController} />
         </div>
       );
@@ -336,12 +348,12 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
     }
     return (
       <div>
-        <UserInvitation doLogin={setupGameController} />
+        <UserInvitation doLogin={setupGameController} deleteInvitation={setDeleteInvitation} />
         <WorldMap />
         <VideoOverlay preferredMode='fullwidth' />
       </div>
     );
-  }, [setupGameController, appState.sessionToken, videoInstance]);
+  }, [setupGameController, appState.myUserToken, appState.sessionToken, videoInstance, setDeleteInvitation, setupLoginController]);
   return (
     <CoveyAppContext.Provider value={appState}>
       <VideoContext.Provider value={Video.instance()}>

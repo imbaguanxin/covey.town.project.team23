@@ -11,13 +11,15 @@ interface TownSelectionProps {
 }
 
 export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Element {
-  const [userName, setUserName] = useState<string>(Video.instance()?.userName || '');
+  // Todo, need to change user name to the real username from app state. 
+  // const [userName, setUserName] = useState<string>(Video.instance()?.userName || '');
   const [newTownName, setNewTownName] = useState<string>('');
   const [newTownIsPublic, setNewTownIsPublic] = useState<boolean>(true);
   const [townIDToJoin, setTownIDToJoin] = useState<string>('');
   const [currentPublicTowns, setCurrentPublicTowns] = useState<CoveyTownInfo[]>();
   const { connect } = useVideoContext();
   const { apiClient } = useCoveyAppState();
+  const userName = "dummyUserName";
   const toast = useToast();
 
   const updateTownListings = useCallback(() => {
@@ -126,16 +128,6 @@ export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Elem
     <>
       <form>
         <Stack>
-          <Box p='4' borderWidth='1px' borderRadius='lg'>
-            <Heading as='h2' size='lg'>
-              Select a username
-            </Heading>
-
-            <FormControl>
-              <FormLabel htmlFor='name'>Name</FormLabel>
-              <Input autoFocus name='name' placeholder='Your name' value={userName} onChange={event => setUserName(event.target.value)} />
-            </FormControl>
-          </Box>
           <Box borderWidth='1px' borderRadius='lg'>
             <Heading p='4' as='h2' size='lg'>
               Create a New Town

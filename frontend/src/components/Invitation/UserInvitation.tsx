@@ -2,16 +2,35 @@ import { CheckIcon, CloseIcon, TriangleDownIcon } from '@chakra-ui/icons';
 import { Box, Button, Drawer, DrawerBody, DrawerContent, DrawerHeader, DrawerOverlay, Flex, HStack, SimpleGrid, Table, Td, Th, Thead, Tr, useColorModeValue, useDisclosure } from '@chakra-ui/react';
 import React from 'react';
 import { TownJoinResponse } from '../../classes/ServiceClient';
-import useCoveyAppState from '../../hooks/useCoveyAppState';
 
-interface LoginProps {
+interface InvitationProps {
   doLogin: (initData: TownJoinResponse) => Promise<boolean>;
+  deleteInvitation: (coveyTownID: string) => Promise<boolean>;
 }
 
-export function TownLink(): JSX.Element {
+export function TownLink({ doLogin, deleteInvitation }: InvitationProps): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  const { invitations, apiClient } = useCoveyAppState();
+  // const { invitations, apiClient } = useCoveyAppState();
+
+  const invitations = ['testID1', 'testID2'];
+
+  const renderTown = (townID: string) => (
+      <Tr>
+        <Td>room 1</Td>
+        <Td>{townID}</Td>
+        <Td>
+          <SimpleGrid columns={2} spacing='40px'>
+            <Button leftIcon={<CheckIcon />} colorScheme='green' size='xs'>
+              accept
+            </Button>
+            <Button leftIcon={<CloseIcon />} colorScheme='red' size='xs'>
+              deny
+            </Button>
+          </SimpleGrid>
+        </Td>
+      </Tr>
+    );
 
   return (
     <>
@@ -31,34 +50,7 @@ export function TownLink(): JSX.Element {
                     <Th>Options</Th>
                   </Tr>
                 </Thead>
-                <Tr>
-                  <Td>room 1</Td>
-                  <Td>dsa21312</Td>
-                  <Td>
-                    <SimpleGrid columns={2} spacing='40px'>
-                      <Button leftIcon={<CheckIcon />} colorScheme='green' size='xs'>
-                        accept
-                      </Button>
-                      <Button leftIcon={<CloseIcon />} colorScheme='red' size='xs'>
-                        deny
-                      </Button>
-                    </SimpleGrid>
-                  </Td>
-                </Tr>
-                <Tr>
-                  <Td>room 2</Td>
-                  <Td>dabcd1321241</Td>
-                  <Td>
-                    <SimpleGrid columns={2} spacing='40px'>
-                      <Button leftIcon={<CheckIcon />} colorScheme='green' size='xs'>
-                        accept
-                      </Button>
-                      <Button leftIcon={<CloseIcon />} colorScheme='red' size='xs'>
-                        deny
-                      </Button>
-                    </SimpleGrid>
-                  </Td>
-                </Tr>
+                {invitations.map(id => renderTown(id))}
               </Table>
             </DrawerBody>
           </DrawerContent>
@@ -68,7 +60,7 @@ export function TownLink(): JSX.Element {
   );
 }
 
-export default function UserInvitation({ doLogin }: LoginProps): JSX.Element {
+export default function UserInvitation({ doLogin, deleteInvitation }: InvitationProps): JSX.Element {
   /* eslint-disable no-use-before-define */
   return (
     <>
@@ -78,7 +70,7 @@ export default function UserInvitation({ doLogin }: LoginProps): JSX.Element {
             <Box>TODO: Covey Logo</Box>
           </HStack>
           <Flex alignItems='center'>
-            <TownLink />
+            <TownLink doLogin={doLogin} deleteInvitation={deleteInvitation} />
           </Flex>
         </Flex>
       </Box>
