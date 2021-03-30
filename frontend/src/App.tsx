@@ -339,7 +339,7 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
           <Route path='/' exact>
             <UserCreation doLogin={setupLoginController} />
           </Route>
-          <Route path='/joinInvitation/:invitationToken'
+          <Route path='/join/:invitationToken'
                  render={(prop) => <UserLinkJoin userLogin={setupLoginController}
                                                  townLogin={setupGameController}
                                                  params={prop.match.params}/>} />
