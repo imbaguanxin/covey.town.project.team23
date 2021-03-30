@@ -333,16 +333,16 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
   }, [dispatchAppUpdate, setOnDisconnect]);
 
   const page = useMemo(() => {
-    // TODO : setup invitation controller
     if (!appState.myUserToken) {
       return (
         <div>
           <Route path='/' exact>
             <UserCreation doLogin={setupLoginController} />
           </Route>
-          <Route path='/joinInvitation/:invitionToken'>
-            <UserLinkJoin doLogin={setupGameController} />
-          </Route>
+          <Route path='/joinInvitation/:invitationToken'
+                 render={(prop) => <UserLinkJoin userLogin={setupLoginController}
+                                                 townLogin={setupGameController}
+                                                 params={prop.match.params}/>} />
         </div>
       ) ;
     }
