@@ -11,14 +11,12 @@ interface TownSelectionProps {
 }
 
 export default function TownSelection({ doLogin }: TownSelectionProps): JSX.Element {
-  // Todo, need to change user name to the real username from app state.
   const [newTownName, setNewTownName] = useState<string>('');
   const [newTownIsPublic, setNewTownIsPublic] = useState<boolean>(true);
   const [townIDToJoin, setTownIDToJoin] = useState<string>('');
   const [currentPublicTowns, setCurrentPublicTowns] = useState<CoveyTownInfo[]>();
   const { connect } = useVideoContext();
-  const { apiClient } = useCoveyAppState();
-  const userName = 'dummyUserName';
+  const { userName, apiClient } = useCoveyAppState();
   const toast = useToast();
 
   const updateTownListings = useCallback(() => {
