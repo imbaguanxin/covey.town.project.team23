@@ -11,8 +11,12 @@ import {
   Text,
   useToast
 } from '@chakra-ui/react';
+import assert from 'assert';
+
 import { CreateUserBodyResponse, TownJoinResponse } from '../../classes/ServiceClient';
 import useCoveyAppState from '../../hooks/useCoveyAppState';
+import useVideoContext from '../VideoCall/VideoFrontend/hooks/useVideoContext/useVideoContext';
+import Video from '../../classes/Video/Video';
 
 interface UserLinkJoinProps {
   userLogin: (initData: CreateUserBodyResponse) => Promise<boolean>;
@@ -24,12 +28,14 @@ export default function UserLinkJoin({ userLogin, townLogin, params }: UserLinkJ
   const [newUserName, setNewUserName] = useState<string>('');
   const [invitedTownID, setInvitedTownID] = useState<string>('');
   const [invitedTownName, setInvitedTownName] = useState<string>('');
-  const { apiClient } = useCoveyAppState();
+  const { invitationSocket, townSocket, apiClient } = useCoveyAppState();
+  const { connect } = useVideoContext();
   const toast = useToast();
 
   const getTownInfo = useCallback(async () => {
     try {
-      const { coveyTownID, friendlyName } = await apiClient.joinUsingUrl({ invitationID: params.invitationToken });
+      const res = await apiClient.joinUsingUrl({ invitationID: params.invitationToken });
+      const { coveyTownID, friendlyName } = res;
       setInvitedTownID(coveyTownID);
       setInvitedTownName(friendlyName);
     } catch (err) {
@@ -46,21 +52,38 @@ export default function UserLinkJoin({ userLogin, townLogin, params }: UserLinkJ
   }, [getTownInfo, apiClient]);
 
   const handleJoin = useCallback(
-    async (username: string) => {
+    async (userName: string) => {
       try {
-        const createUserRes = await apiClient.createUser({ username });
-        const joinRoomRes = await apiClient.joinTown({ userName: newUserName, coveyTownID: invitedTownID });
+        const createUserRes = await apiClient.createUser({ username: userName });
         await userLogin(createUserRes);
-        await townLogin(joinRoomRes);
+        
+        const joinRoomRes = await Video.setup(userName, invitedTownID);
+        const loggedIn = await townLogin(joinRoomRes);
+        if (loggedIn) {
+          assert(joinRoomRes.providerVideoToken);
+          await connect(joinRoomRes.providerVideoToken);
+        }
       } catch (err) {
+        invitationSocket?.disconnect();
+        townSocket?.disconnect();
         toast({
-          title: `Unable to create user: ${username}`,
+          title: `Unable to create user: ${userName} at room ${invitedTownName}`,
           description: err.toString(),
           status: 'error',
         });
       }
     },
-    [invitedTownID, newUserName, userLogin, townLogin, toast, apiClient],
+    [
+      connect,
+      invitedTownID,
+      invitedTownName,
+      invitationSocket,
+      townSocket,
+      userLogin,
+      townLogin,
+      toast,
+      apiClient,
+    ],
   );
 
   return (

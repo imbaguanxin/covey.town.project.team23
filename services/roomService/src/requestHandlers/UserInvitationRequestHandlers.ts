@@ -65,7 +65,7 @@ export async function joinLinkHandler(requestData: JoinLinkRequest): Promise<Res
   return {
     isOK: true,
     response: {
-      conveyTownID: coveyTownController.coveyTownID,
+      coveyTownID: coveyTownController.coveyTownID,
       friendlyName: coveyTownController.friendlyName,
     },
   };

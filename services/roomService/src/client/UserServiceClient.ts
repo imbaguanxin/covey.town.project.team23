@@ -64,7 +64,7 @@ export interface JoinInvitationBodyRequest {
  * The format of join as a outside user response
  */
 export interface JoinInvitationBodyResponse {
-  conveyTownID: string;
+  coveyTownID: string;
   friendlyName: string;
 }
 

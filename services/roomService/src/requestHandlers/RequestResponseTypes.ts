@@ -101,7 +101,7 @@ export interface JoinLinkRequest {
 }
 
 export interface JoinLinkResponse {
-  conveyTownID: string;
+  coveyTownID: string;
   friendlyName: string;
 }
 
