@@ -105,6 +105,12 @@ export async function townJoinHandler(requestData: TownJoinRequest): Promise<Res
       message: 'Error: No such town',
     };
   }
+  if (coveyTownController.occupancy >= coveyTownController.capacity) {
+    return {
+      isOK: false,
+      message: 'Error: Max capacity at town',
+    }
+  }
   const newPlayer = new Player(requestData.userName);
   const newSession = await coveyTownController.addPlayer(newPlayer);
   assert(newSession.videoToken);
