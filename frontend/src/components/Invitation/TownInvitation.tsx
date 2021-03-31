@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {
   Box,
@@ -27,14 +27,35 @@ import Grid from '@material-ui/core/Grid';
 import MenuItem from '@material-ui/core/MenuItem';
 import Typography from '@material-ui/core/Typography';
 
+import useCoveyAppState from '../../hooks/useCoveyAppState';
 import useMaybeVideo from '../../hooks/useMaybeVideo';
 
 const TownInvitation: React.FunctionComponent = () => {
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {isOpen, onOpen, onClose} = useDisclosure();
   const video = useMaybeVideo();
+  const {myUserID, currentTownID, apiClient} = useCoveyAppState();
+  const [availableUsers, setAvailableUsers] = useState<{ username: string; userID: string }[]>([]);
+  const [invitationToken, setInvitationToken] = useState<string>('');
 
-  // TODO
-  const invitationToken = 'EfaZL7eicRHPv2MxClxWkART';
+  const updateInvitationToken = useCallback(() => {
+    apiClient.getInvitationIDOfTown({townID: currentTownID}).then(res => {
+      setInvitationToken(res.invitationID);
+    });
+  }, [currentTownID, apiClient]);
+  const updateUserListings = useCallback(() => {
+    apiClient.listUsers().then(res => {
+      setAvailableUsers(res.users.filter(user => user.userID !== myUserID)
+        .sort((a, b) => b.username.localeCompare(a.username)));
+    });
+  }, [myUserID, setAvailableUsers, apiClient]);
+  useEffect(() => {
+    updateInvitationToken();
+    updateUserListings();
+    const timer = setInterval(updateUserListings, 2000);
+    return () => {
+      clearInterval(timer);
+    };
+  }, [updateInvitationToken, updateUserListings]);
 
   const toast = useToast();
   const openSettings = useCallback(() => {
@@ -47,13 +68,28 @@ const TownInvitation: React.FunctionComponent = () => {
     video?.unPauseGame();
   }, [onClose, video]);
 
-  const handleSendInvite = async (userID: string) => {
-    toast({
-      title: 'debug, remove this when you implement this functionality',
-      description: `current status: userID: ${userID}`,
-      status: 'info',
-    });
-  };
+  const handleSendInvite = useCallback(async (userID: string) => {
+    try {
+      const {invitationSent} = await apiClient.inviteUserInSystem({
+        invitedUserID: userID,
+        coveyTownID: currentTownID,
+      });
+      if (invitationSent) {
+        toast({
+          title: 'Invitation sent!',
+          status: 'success',
+        })
+      } else {
+        throw Error('Responded with failed sent info.');
+      }
+    } catch (err) {
+      toast({
+        title: 'Oops, something went wrong when senting the invitation.',
+        description: err.toString(),
+        status: 'error',
+      });
+    }
+  }, [currentTownID, apiClient, toast]);
 
   return (
     <>
@@ -61,10 +97,10 @@ const TownInvitation: React.FunctionComponent = () => {
         <Typography variant='body1'>Invite</Typography>
       </MenuItem>
       <Modal isOpen={isOpen} onClose={closeSettings}>
-        <ModalOverlay />
+        <ModalOverlay/>
         <ModalContent>
           <ModalHeader>Invite Other Users</ModalHeader>
-          <ModalCloseButton />
+          <ModalCloseButton/>
           <form>
             <ModalBody pb={6}>
               <FormLabel htmlFor='invitationLink'>Invite other users with this Link:</FormLabel>
@@ -78,10 +114,12 @@ const TownInvitation: React.FunctionComponent = () => {
               </Grid>
 
               <FormControl>
-                <Box maxH='700px' overflowY='scroll'>
+                <Box maxH='500px' overflowY='scroll' maxW='1000px'>
                   <FormLabel htmlFor='invitationIn'>Or invite them here if they are already here:</FormLabel>
                   <Table>
-                    <TableCaption placement='bottom'>Available users</TableCaption>
+                    <TableCaption placement='bottom'>
+                      {availableUsers.length > 0 ? 'Available users' : 'No available uers'}
+                    </TableCaption>
                     <Thead>
                       <Tr>
                         <Th>Name</Th>
@@ -90,18 +128,17 @@ const TownInvitation: React.FunctionComponent = () => {
                       </Tr>
                     </Thead>
                     <Tbody>
-                      <Tr key='demoUserID'>
-                        <Td role='cell'>DEMO_NAME</Td>
-                        <Td role='cell'>demoUserID</Td>
-                        <Td role='cell'>
-                          <Button
-                            onClick={() => {
-                              handleSendInvite('demoUserID');
-                            }}>
-                            Invite
-                          </Button>
-                        </Td>
-                      </Tr>
+                      {availableUsers.map(userInfo => (
+                        <Tr key={userInfo.userID}>
+                          <Td role='cell'>{userInfo.username}</Td>
+                          <Td role='cell'>{userInfo.userID}</Td>
+                          <Td role='cell'>
+                            <Button onClick={() => handleSendInvite(userInfo.userID)}>
+                              Invite
+                            </Button>
+                          </Td>
+                        </Tr>
+                      ))}
                     </Tbody>
                   </Table>
                 </Box>
