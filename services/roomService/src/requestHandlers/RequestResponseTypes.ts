@@ -120,10 +120,6 @@ export interface InviteUserInSystemRequest {
   coveyTownID: string;
 }
 
-export interface InviteUserInSystemResponse {
-  invitationSent: boolean;
-}
-
 /**
  * Envelope that wraps any response from the server
  */

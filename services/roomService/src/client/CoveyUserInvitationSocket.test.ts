@@ -63,24 +63,47 @@ describe('UserServiceApiSocket', () => {
     const userList = await apiUserClient.listUsers();
     expect(userList.users.find(user => user.userID === userData.userID)).toBeUndefined();
   });
-  it('Be able to receive invitation from valid towns', async () => {
-    // Make a valid user
-    const userData = await apiUserClient.createUser({ username: nanoid() });
-    const { socket, socketConnected, invitationReceived } = TestUtils.createUserSocketClient(server, userData.userToken, userData.userID);
-    await socketConnected;
+  describe('InviteAsInsideUser', () => {
+    let userData: { username: string, userID: string, userToken: string };
+    let townData: { coveyTownID: string, coveyTownPassword: string };
 
-    // Make a valid town
-    const townData = await apiTownClient.createTown({
-      friendlyName: nanoid(),
-      isPubliclyListed: true,
+    beforeAll(async () => {
+      userData = await apiUserClient.createUser({ username: nanoid() });
+      townData = await apiTownClient.createTown({ friendlyName: nanoid(), isPubliclyListed: true });
     });
-
-    // Receive invitation from a valid town
-    const res = await apiUserClient.inviteUserInSystem({
-      invitedUserID: userData.userID,
-      coveyTownID: townData.coveyTownID,
+    it('Town ID in an invitation should refer to an existing town.', async () => {
+        try {
+            await apiUserClient.inviteUserInSystem({
+                invitedUserID: userData.userID,
+                coveyTownID: nanoid(),
+            });
+            fail('Sent an invitation from non-existing room!');
+        } catch (err) {
+            /* Inviting a user with non-existing room ID. Expected. */
+        }
     });
-    expect(res.invitationSent).toBeTruthy();
-    expect((await invitationReceived).coveyTownID).toEqual(townData.coveyTownID);
+    it('An invitation should be sent to existing user in the system.', async () => {
+        try {
+            await apiUserClient.inviteUserInSystem({
+                invitedUserID: nanoid(),
+                coveyTownID: townData.coveyTownID,
+            });
+            fail('Sent an invitation to a nonsense!');
+        } catch (err) {
+            /* Inviting a non-existing user. Expected. */
+        }
+    });
+    it('Be able to receive invitation from valid towns', async () => {
+        // Make a valid user socket
+        const { socketConnected, invitationReceived } = TestUtils.createUserSocketClient(server, userData.userToken, userData.userID);
+        await socketConnected;
+    
+        // Receive invitation from a valid town
+        await apiUserClient.inviteUserInSystem({
+          invitedUserID: userData.userID,
+          coveyTownID: townData.coveyTownID,
+        });
+        expect((await invitationReceived).coveyTownID).toEqual(townData.coveyTownID);
+    });
   });
 });

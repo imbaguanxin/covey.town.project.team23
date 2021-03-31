@@ -5,7 +5,6 @@ import {
   GetInvitationLinkRequest,
   GetInvitationLinkResponse,
   InviteUserInSystemRequest,
-  InviteUserInSystemResponse,
   JoinLinkRequest,
   JoinLinkResponse,
   ResponseEnvelope,
@@ -71,14 +70,13 @@ export async function joinLinkHandler(requestData: JoinLinkRequest): Promise<Res
   };
 }
 
-export async function inviteUserInSystemHandler(requestData: InviteUserInSystemRequest): Promise<ResponseEnvelope<InviteUserInSystemResponse>> {
+export async function inviteUserInSystemHandler(requestData: InviteUserInSystemRequest): Promise<ResponseEnvelope<Record<string, null>>> {
   const userController = CoveyUserController.getInstance();
   const result = userController.inviteUser(requestData.invitedUserID, requestData.coveyTownID);
   return {
-    isOK: true,
-    response: {
-      invitationSent: result,
-    },
+    isOK: result,
+    response: {},
+    message: result ? undefined : 'Failed to send invitation.',
   };
 }
 

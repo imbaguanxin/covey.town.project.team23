@@ -70,18 +70,14 @@ const TownInvitation: React.FunctionComponent = () => {
 
   const handleSendInvite = useCallback(async (userID: string) => {
     try {
-      const {invitationSent} = await apiClient.inviteUserInSystem({
+      await apiClient.inviteUserInSystem({
         invitedUserID: userID,
         coveyTownID: currentTownID,
       });
-      if (invitationSent) {
-        toast({
-          title: 'Invitation sent!',
-          status: 'success',
-        })
-      } else {
-        throw Error('Responded with failed sent info.');
-      }
+      toast({
+        title: 'Invitation sent!',
+        status: 'success',
+      });
     } catch (err) {
       toast({
         title: 'Oops, something went wrong when senting the invitation.',

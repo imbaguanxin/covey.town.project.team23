@@ -48,13 +48,6 @@ export interface InviteUserInSystemBodyRequest {
 }
 
 /**
- * The format of inviting a in system user to a town response
- */
-export interface InviteUserInSystemBodyResponse {
-  invitationSent: boolean;
-}
-
-/**
  * The url param of join as a outside user request
  */
 export interface JoinInvitationBodyRequest {
@@ -117,8 +110,8 @@ export default class UserServiceClient {
     return UserServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
-  async inviteUserInSystem(requestData: InviteUserInSystemBodyRequest): Promise<InviteUserInSystemBodyResponse> {
-    const responseWrapper = await this._axios.post<ResponseEnvelope<InviteUserInSystemBodyResponse>>('/invitation', requestData);
+  async inviteUserInSystem(requestData: InviteUserInSystemBodyRequest): Promise<Record<string, null>> {
+    const responseWrapper = await this._axios.post<ResponseEnvelope<Record<string, null>>>('/invitation', requestData);
     return UserServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
