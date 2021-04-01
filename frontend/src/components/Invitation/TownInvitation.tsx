@@ -100,7 +100,7 @@ const TownInvitation: React.FunctionComponent = () => {
           <form>
             <ModalBody pb={6}>
               <FormLabel htmlFor='invitationLink'>Invite other users with this Link:</FormLabel>
-              {`app.covey.town/join/${invitationToken}`}
+              {`${process.env.REACT_APP_CLIENT_URL}/join/${invitationToken}`}
               <Grid container justify='flex-end'>
                 <GridItem>
                   <Button data-testid='invitationCopyButton' colorScheme='green' mr={3}>
