@@ -1,4 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   Box,
   Button,
@@ -28,6 +29,7 @@ export default function UserLinkJoin({userLogin, townLogin, params}: UserLinkJoi
   const [newUserName, setNewUserName] = useState<string>('');
   const [invitedTownID, setInvitedTownID] = useState<string>('');
   const [invitedTownName, setInvitedTownName] = useState<string>('');
+  const history = useHistory();
   const {invitationSocket, townSocket, apiClient} = useCoveyAppState();
   const {connect} = useVideoContext();
   const toast = useToast();
@@ -71,6 +73,7 @@ export default function UserLinkJoin({userLogin, townLogin, params}: UserLinkJoi
           status: 'error',
         });
       }
+      history.push('/');
     },
     [
       connect,
@@ -82,6 +85,7 @@ export default function UserLinkJoin({userLogin, townLogin, params}: UserLinkJoi
       townLogin,
       toast,
       apiClient,
+      history,
     ],
   );
 
