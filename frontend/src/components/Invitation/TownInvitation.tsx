@@ -36,6 +36,7 @@ const TownInvitation: React.FunctionComponent = () => {
   const {myUserID, currentTownID, apiClient} = useCoveyAppState();
   const [availableUsers, setAvailableUsers] = useState<{ username: string; userID: string }[]>([]);
   const [invitationToken, setInvitationToken] = useState<string>('');
+  const invitationUrl = `${process.env.REACT_APP_CLIENT_URL}/join/${invitationToken}`;
 
   const updateInvitationToken = useCallback(() => {
     apiClient.getInvitationIDOfTown({townID: currentTownID}).then(res => {
@@ -67,6 +68,22 @@ const TownInvitation: React.FunctionComponent = () => {
     onClose();
     video?.unPauseGame();
   }, [onClose, video]);
+
+  const handleCopy = useCallback(async () => {
+      try {
+        await navigator.clipboard.writeText(invitationUrl);
+        toast({
+            title: 'Copied to clipboard!',
+            status: 'success',
+        });
+      } catch (err) {
+        toast({
+            title: 'Failed to copy to clipboard!',
+            description: err.toString(),
+            status: 'error',
+        });
+      }
+  }, [invitationUrl, toast]);
 
   const handleSendInvite = useCallback(async (userID: string) => {
     try {
@@ -100,10 +117,10 @@ const TownInvitation: React.FunctionComponent = () => {
           <form>
             <ModalBody pb={6}>
               <FormLabel htmlFor='invitationLink'>Invite other users with this Link:</FormLabel>
-              {`${process.env.REACT_APP_CLIENT_URL}/join/${invitationToken}`}
+              {invitationUrl}
               <Grid container justify='flex-end'>
                 <GridItem>
-                  <Button data-testid='invitationCopyButton' colorScheme='green' mr={3}>
+                  <Button data-testid='invitationCopyButton' colorScheme='green' mr={3} onClick={handleCopy}>
                     Copy
                   </Button>
                 </GridItem>
