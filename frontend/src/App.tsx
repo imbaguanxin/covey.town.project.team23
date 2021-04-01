@@ -268,7 +268,7 @@ async function GameController(initData: TownJoinResponse, dispatchAppUpdate: (up
     dispatchAppUpdate({ action: 'playerDisconnect', player: Player.fromServerPlayer(player) });
   });
   socket.on('disconnect', () => {
-    dispatchAppUpdate({ action: 'disconnect' });
+    dispatchAppUpdate({ action: 'goRoomList' });
   });
   const emitMovement = (location: UserLocation) => {
     socket.emit('playerMovement', location);
@@ -302,6 +302,11 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
     [dispatchAppUpdate],
   );
 
+  const setLogout = useCallback(async () => {
+    dispatchAppUpdate({ action: 'disconnect' });
+    return true;
+  }, [dispatchAppUpdate]);
+
   const setDeleteInvitation = useCallback(
     async (coveyTownID: string) => {
       async function deleteInvitation() {
@@ -327,7 +332,7 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
   useEffect(() => {
     setOnDisconnect(() => async () => {
       // Here's a great gotcha: https://medium.com/swlh/how-to-store-a-function-with-the-usestate-hook-in-react-8a88dd4eede1
-      dispatchAppUpdate({ action: 'disconnect' });
+      dispatchAppUpdate({ action: 'goRoomList' });
       return Video.teardown();
     });
   }, [dispatchAppUpdate, setOnDisconnect]);
@@ -349,7 +354,7 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
     if (!appState.sessionToken) {
       return (
         <div>
-          <UserInvitation doLogin={setupGameController} deleteInvitation={setDeleteInvitation} />
+          <UserInvitation doLogin={setupGameController} doLogout={setLogout} deleteInvitation={setDeleteInvitation} />
           <Login doLogin={setupGameController} />
         </div>
       );
@@ -359,12 +364,20 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
     }
     return (
       <div>
-        <UserInvitation doLogin={setupGameController} deleteInvitation={setDeleteInvitation} />
+        <UserInvitation doLogin={setupGameController} doLogout={setLogout} deleteInvitation={setDeleteInvitation} />
         <WorldMap />
         <VideoOverlay preferredMode='fullwidth' />
       </div>
     );
-  }, [setupGameController, appState.myUserToken, appState.sessionToken, videoInstance, setDeleteInvitation, setupLoginController]);
+  }, [
+    setupGameController,
+    appState.myUserToken,
+    appState.sessionToken,
+    videoInstance,
+    setLogout,
+    setDeleteInvitation,
+    setupLoginController,
+  ]);
   return (
     <CoveyAppContext.Provider value={appState}>
       <VideoContext.Provider value={Video.instance()}>

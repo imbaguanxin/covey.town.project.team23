@@ -25,13 +25,14 @@ import { TownJoinResponse } from '../../classes/ServiceClient';
 import Video from '../../classes/Video/Video';
 import useCoveyAppState from '../../hooks/useCoveyAppState';
 import useVideoContext from '../VideoCall/VideoFrontend/hooks/useVideoContext/useVideoContext';
+import LogoutButton from '../Login/LogoutButton';
 
-interface InvitationProps {
+interface TownLinkProps {
   doLogin: (initData: TownJoinResponse) => Promise<boolean>;
   deleteInvitation: (coveyTownID: string) => Promise<boolean>;
 }
 
-export function TownLink({ doLogin, deleteInvitation }: InvitationProps): JSX.Element {
+function TownLink({ doLogin, deleteInvitation }: TownLinkProps): JSX.Element {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { connect } = useVideoContext();
 
@@ -119,7 +120,13 @@ export function TownLink({ doLogin, deleteInvitation }: InvitationProps): JSX.El
   );
 }
 
-export default function UserInvitation({ doLogin, deleteInvitation }: InvitationProps): JSX.Element {
+interface InvitationProps {
+    doLogin: (initData: TownJoinResponse) => Promise<boolean>;
+    doLogout: () => Promise<boolean>;
+    deleteInvitation: (coveyTownID: string) => Promise<boolean>;
+}
+
+export default function UserInvitation({ doLogin, doLogout, deleteInvitation }: InvitationProps): JSX.Element {
   /* eslint-disable no-use-before-define */
   return (
     <>
@@ -129,6 +136,7 @@ export default function UserInvitation({ doLogin, deleteInvitation }: Invitation
             <Box>TODO: Covey Logo</Box>
           </HStack>
           <Flex alignItems='center'>
+            <LogoutButton doLogout={doLogout} />
             <TownLink doLogin={doLogin} deleteInvitation={deleteInvitation} />
           </Flex>
         </Flex>
