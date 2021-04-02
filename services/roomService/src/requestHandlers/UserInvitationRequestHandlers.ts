@@ -5,7 +5,6 @@ import {
   GetInvitationLinkRequest,
   GetInvitationLinkResponse,
   InviteUserInSystemRequest,
-  InviteUserInSystemResponse,
   JoinLinkRequest,
   JoinLinkResponse,
   ResponseEnvelope,
@@ -14,9 +13,7 @@ import {
   UserListResponse,
 } from './RequestResponseTypes';
 
-export async function userCreateHandler(
-  requestData: UserCreateRequest,
-): Promise<ResponseEnvelope<UserCreateResponse>> {
+export async function userCreateHandler(requestData: UserCreateRequest): Promise<ResponseEnvelope<UserCreateResponse>> {
   if (requestData.username.length === 0) {
     return { isOK: false, message: 'Username must be specified' };
   }
@@ -42,9 +39,7 @@ export async function userListHandler(): Promise<ResponseEnvelope<UserListRespon
  * @param requestData
  * @returns
  */
-export async function getInvitationLinkHandler(
-  requestData: GetInvitationLinkRequest,
-): Promise<ResponseEnvelope<GetInvitationLinkResponse>> {
+export async function getInvitationLinkHandler(requestData: GetInvitationLinkRequest): Promise<ResponseEnvelope<GetInvitationLinkResponse>> {
   const townsStore = CoveyTownsStore.getInstance();
   const coveyTownController = townsStore.getControllerForTown(requestData.coveyTownID);
 
@@ -59,9 +54,7 @@ export async function getInvitationLinkHandler(
  * @param requestData
  * @returns
  */
-export async function joinLinkHandler(
-  requestData: JoinLinkRequest,
-): Promise<ResponseEnvelope<JoinLinkResponse>> {
+export async function joinLinkHandler(requestData: JoinLinkRequest): Promise<ResponseEnvelope<JoinLinkResponse>> {
   const townsStore = CoveyTownsStore.getInstance();
   const coveyTownController = townsStore.getControllerFromInvitationID(requestData.invitationID);
 
@@ -71,22 +64,19 @@ export async function joinLinkHandler(
   return {
     isOK: true,
     response: {
-      conveyTownID: coveyTownController.coveyTownID,
+      coveyTownID: coveyTownController.coveyTownID,
       friendlyName: coveyTownController.friendlyName,
     },
   };
 }
 
-export async function inviteUserInSystemHandler(
-  requestData: InviteUserInSystemRequest,
-): Promise<ResponseEnvelope<InviteUserInSystemResponse>> {
+export async function inviteUserInSystemHandler(requestData: InviteUserInSystemRequest): Promise<ResponseEnvelope<Record<string, null>>> {
   const userController = CoveyUserController.getInstance();
   const result = userController.inviteUser(requestData.invitedUserID, requestData.coveyTownID);
   return {
-    isOK: true,
-    response: {
-      invitationSent: result,
-    },
+    isOK: result,
+    response: {},
+    message: result ? undefined : 'Failed to send invitation.',
   };
 }
 

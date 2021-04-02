@@ -10,8 +10,8 @@ const app = Express();
 app.use(CORS());
 const server = http.createServer(app);
 
-const userSocketServer = addUserInvitationRoutes(server, app);
-const townSocketServer = addTownRoutes(server, app);
+addUserInvitationRoutes(server, app);
+addTownRoutes(server, app);
 
 server.listen(process.env.PORT || 8081, () => {
   const address = server.address() as AddressInfo;

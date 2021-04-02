@@ -3,7 +3,7 @@ import http, { Server } from 'http';
 import { AddressInfo } from 'net';
 import { Socket as ServerSocket } from 'socket.io';
 import { io, Socket } from 'socket.io-client';
-import { UserLocation } from '../CoveyTypes';
+import { CoveyTown, UserLocation } from '../CoveyTypes';
 
 export type RemoteServerPlayer = {
   location: UserLocation;
@@ -32,14 +32,14 @@ export function createSocketClient(
   path: string,
   auth?: object | ((cb: (data: object) => void) => void),
 ): {
-    socket: Socket;
-    socketConnected: Promise<void>;
-    socketDisconnected: Promise<void>;
-    playerMoved: Promise<RemoteServerPlayer>;
-    newPlayerJoined: Promise<RemoteServerPlayer>;
-    playerDisconnected: Promise<RemoteServerPlayer>;
-    invitationReceived: Promise<string>;
-  } {
+  socket: Socket;
+  socketConnected: Promise<void>;
+  socketDisconnected: Promise<void>;
+  playerMoved: Promise<RemoteServerPlayer>;
+  newPlayerJoined: Promise<RemoteServerPlayer>;
+  playerDisconnected: Promise<RemoteServerPlayer>;
+  invitationReceived: Promise<CoveyTown>;
+} {
   const address = server.address() as AddressInfo;
   const socket = io(`http://localhost:${address.port}`, {
     path,
@@ -72,9 +72,9 @@ export function createSocketClient(
       resolve(player);
     });
   });
-  const invitationReceivePromise = new Promise<string>(resolve => {
-    socket.on('invitedToTown', (coveyTownID: string) => {
-      resolve(coveyTownID);
+  const invitationReceivePromise = new Promise<CoveyTown>(resolve => {
+    socket.on('invitedToTown', (townInfo: CoveyTown) => {
+      resolve(townInfo);
     });
   });
   createdSocketClients.push(socket);
@@ -101,7 +101,11 @@ export function createSocketClient(
  * @param sessionToken A Covey.Town session token to pass as authentication
  * @param coveyTownID A Covey.Town Town ID to pass to the server as our desired town
  */
-export function createTownSocketClient(server: Server, sessionToken: string, coveyTownID: string): {
+export function createTownSocketClient(
+  server: Server,
+  sessionToken: string,
+  coveyTownID: string,
+): {
   socket: Socket;
   socketConnected: Promise<void>;
   socketDisconnected: Promise<void>;
@@ -109,14 +113,7 @@ export function createTownSocketClient(server: Server, sessionToken: string, cov
   newPlayerJoined: Promise<RemoteServerPlayer>;
   playerDisconnected: Promise<RemoteServerPlayer>;
 } {
-  const {
-    socket,
-    socketConnected,
-    socketDisconnected,
-    playerMoved,
-    newPlayerJoined,
-    playerDisconnected,
-  } = createSocketClient(server, '/town', { token: sessionToken, coveyTownID });
+  const { socket, socketConnected, socketDisconnected, playerMoved, newPlayerJoined, playerDisconnected } = createSocketClient(server, '/town', { token: sessionToken, coveyTownID });
   return {
     socket,
     socketConnected,
@@ -127,18 +124,17 @@ export function createTownSocketClient(server: Server, sessionToken: string, cov
   };
 }
 
-export function createUserSocketClient(server: Server, userToken: string, userID: string): {
+export function createUserSocketClient(
+  server: Server,
+  userToken: string,
+  userID: string,
+): {
   socket: Socket;
   socketConnected: Promise<void>;
   socketDisconnected: Promise<void>;
-  invitationReceived: Promise<string>;
+  invitationReceived: Promise<CoveyTown>;
 } {
-  const {
-    socket,
-    socketConnected,
-    socketDisconnected,
-    invitationReceived,
-  } = createSocketClient(server, '/user', { token: userToken, userID });
+  const { socket, socketConnected, socketDisconnected, invitationReceived } = createSocketClient(server, '/user', { token: userToken, userID });
   return {
     socket,
     socketConnected,

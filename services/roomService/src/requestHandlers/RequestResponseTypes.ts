@@ -101,7 +101,7 @@ export interface JoinLinkRequest {
 }
 
 export interface JoinLinkResponse {
-  conveyTownID: string;
+  coveyTownID: string;
   friendlyName: string;
 }
 
@@ -118,10 +118,6 @@ export interface UserCreateResponse {
 export interface InviteUserInSystemRequest {
   invitedUserID: string;
   coveyTownID: string;
-}
-
-export interface InviteUserInSystemResponse {
-  invitationSent: boolean;
 }
 
 /**

@@ -2,13 +2,14 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import assert from 'assert';
 import React, { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useReducer, useState } from 'react';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter as Router, Route } from 'react-router-dom';
 import { io, Socket } from 'socket.io-client';
 import './App.css';
 import Player, { ServerPlayer, UserLocation } from './classes/Player';
 import ServiceClient, { CreateUserBodyResponse, TownJoinResponse } from './classes/ServiceClient';
 import Video from './classes/Video/Video';
 import UserInvitation from './components/Invitation/UserInvitation';
+import UserLinkJoin from './components/Invitation/UserLinkJoin';
 import Login from './components/Login/Login';
 import UserCreation from './components/Login/UserCreation';
 import ErrorDialog from './components/VideoCall/VideoFrontend/components/ErrorDialog/ErrorDialog';
@@ -332,9 +333,18 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
   }, [dispatchAppUpdate, setOnDisconnect]);
 
   const page = useMemo(() => {
-    // TODO : setup invitation controller
     if (!appState.myUserToken) {
-      return <UserCreation doLogin={setupLoginController} />;
+      return (
+        <div>
+          <Route path='/' exact>
+            <UserCreation doLogin={setupLoginController} />
+          </Route>
+          <Route path='/join/:invitationToken'
+                 render={(prop) => <UserLinkJoin userLogin={setupLoginController}
+                                                 townLogin={setupGameController}
+                                                 params={prop.match.params}/>} />
+        </div>
+      ) ;
     }
     if (!appState.sessionToken) {
       return (
@@ -380,7 +390,7 @@ function EmbeddedTwilioAppWrapper() {
 
 export default function AppStateWrapper(): JSX.Element {
   return (
-    <BrowserRouter>
+    <Router>
       <ChakraProvider>
         <MuiThemeProvider theme={theme('rgb(185, 37, 0)')}>
           <AppStateProvider preferredMode='fullwidth' highlightedProfiles={[]}>
@@ -388,6 +398,6 @@ export default function AppStateWrapper(): JSX.Element {
           </AppStateProvider>
         </MuiThemeProvider>
       </ChakraProvider>
-    </BrowserRouter>
+    </Router>
   );
 }

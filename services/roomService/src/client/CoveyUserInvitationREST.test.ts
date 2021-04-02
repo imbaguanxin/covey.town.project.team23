@@ -55,21 +55,21 @@ describe('UserInvitationServiceAPIREST', () => {
     it('The town id quried from invitation link and join invitation link should match', async () => {
       const response1 = await apiClient.getInvitationIDOfTown({ townID: town1.coveyTownID });
       const response2 = await apiClient.joinUsingUrl({ invitationID: response1.invitationID });
-      expect(response2.conveyTownID).toBe(town1.coveyTownID);
+      expect(response2.coveyTownID).toBe(town1.coveyTownID);
       expect(response2.friendlyName).toBe('town1');
     });
 
     it('The join invitation link should be correct', async () => {
       const response1 = await apiClient.getInvitationIDOfTown({ townID: town1.coveyTownID });
       const response2 = unwrapResponse(await joinLinkHandler({ invitationID: response1.invitationID }));
-      expect(response2.conveyTownID).toBe(town1.coveyTownID);
+      expect(response2.coveyTownID).toBe(town1.coveyTownID);
       expect(response2.friendlyName).toBe('town1');
     });
 
     it('The town id quried from invitation link should be correct', async () => {
       const response1 = unwrapResponse(await getInvitationLinkHandler({ coveyTownID: town1.coveyTownID }));
       const response2 = await apiClient.joinUsingUrl({ invitationID: response1.invitationID });
-      expect(response2.conveyTownID).toBe(town1.coveyTownID);
+      expect(response2.coveyTownID).toBe(town1.coveyTownID);
       expect(response2.friendlyName).toBe('town1');
     });
   });

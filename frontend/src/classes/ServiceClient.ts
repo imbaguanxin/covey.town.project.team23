@@ -123,13 +123,6 @@ export interface InviteUserInSystemBodyRequest {
 }
 
 /**
- * The format of inviting a in system user to a town response
- */
-export interface InviteUserInSystemBodyResponse {
-  invitationSent: boolean;
-}
-
-/**
  * The url param of join as a outside user request
  */
 export interface JoinInvitationBodyRequest {
@@ -139,7 +132,7 @@ export interface JoinInvitationBodyRequest {
  * The format of join as a outside user response
  */
 export interface JoinInvitationBodyResponse {
-  conveyTownID: string;
+  coveyTownID: string;
   friendlyName: string;
 }
 
@@ -224,8 +217,8 @@ export default class ServiceClient {
     return ServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
-  async inviteUserInSystem(requestData: InviteUserInSystemBodyRequest): Promise<InviteUserInSystemBodyResponse> {
-    const responseWrapper = await this._axios.post<ResponseEnvelope<InviteUserInSystemBodyResponse>>('/invitation', requestData);
+  async inviteUserInSystem(requestData: InviteUserInSystemBodyRequest): Promise<void> {
+    const responseWrapper = await this._axios.post<ResponseEnvelope<void>>('/invitation', requestData);
     return ServiceClient.unwrapOrThrowError(responseWrapper);
   }
 
