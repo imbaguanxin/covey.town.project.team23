@@ -1,6 +1,6 @@
 import { Button } from '@chakra-ui/react';
 import React from 'react';
-import useCoveyAppState from '../../hooks/useCoveyAppState';
+import useRoomState from '../VideoCall/VideoFrontend/hooks/useRoomState/useRoomState';
 import useVideoContext from '../VideoCall/VideoFrontend/hooks/useVideoContext/useVideoContext';
 
 interface LogoutProps {
@@ -9,17 +9,16 @@ interface LogoutProps {
 
 export default function GoToTownListButton({ goTownList }: LogoutProps): JSX.Element {
   const { room } = useVideoContext();
-  const { sessionToken } = useCoveyAppState();
+  const roomState = useRoomState();
 
   return (
     <Button
       data-testid='gototownlist'
       colorScheme='blue'
+      disabled={roomState === 'disconnected'}
       onClick={async () => {
-        if (sessionToken.length > 0) {
-          await room.disconnect();
-          await goTownList();
-        }
+        await room.disconnect();
+        // await goTownList();
       }}>
       Town List
     </Button>

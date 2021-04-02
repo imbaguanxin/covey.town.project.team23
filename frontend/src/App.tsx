@@ -304,6 +304,9 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
 
   const setLogout = useCallback(async () => {
     dispatchAppUpdate({ action: 'disconnect' });
+
+    // Make sure to tear it down
+    await Video.teardown();
     return true;
   }, [dispatchAppUpdate]);
 
