@@ -319,6 +319,15 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
     [dispatchAppUpdate],
   );
 
+  const setupGoTownList = useCallback(async () => {
+    async function toTownList() {
+      dispatchAppUpdate({ action: 'goRoomList' });
+      return true;
+    }
+    await toTownList();
+    return true;
+  }, [dispatchAppUpdate]);
+
   const setupGameController = useCallback(
     async (initData: TownJoinResponse) => {
       await GameController(initData, dispatchAppUpdate);
@@ -344,17 +353,14 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
           <Route path='/' exact>
             <UserCreation doLogin={setupLoginController} />
           </Route>
-          <Route path='/join/:invitationToken'
-                 render={(prop) => <UserLinkJoin userLogin={setupLoginController}
-                                                 townLogin={setupGameController}
-                                                 params={prop.match.params}/>} />
+          <Route path='/join/:invitationToken' render={prop => <UserLinkJoin userLogin={setupLoginController} townLogin={setupGameController} params={prop.match.params} />} />
         </div>
-      ) ;
+      );
     }
     if (!appState.sessionToken) {
       return (
         <div>
-          <UserInvitation doLogin={setupGameController} doLogout={setLogout} deleteInvitation={setDeleteInvitation} />
+          <UserInvitation doLogin={setupGameController} doLogout={setLogout} deleteInvitation={setDeleteInvitation} goTownList={setupGoTownList} />
           <Login doLogin={setupGameController} />
         </div>
       );
@@ -364,20 +370,12 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
     }
     return (
       <div>
-        <UserInvitation doLogin={setupGameController} doLogout={setLogout} deleteInvitation={setDeleteInvitation} />
+        <UserInvitation doLogin={setupGameController} doLogout={setLogout} deleteInvitation={setDeleteInvitation} goTownList={setupGoTownList} />
         <WorldMap />
         <VideoOverlay preferredMode='fullwidth' />
       </div>
     );
-  }, [
-    setupGameController,
-    appState.myUserToken,
-    appState.sessionToken,
-    videoInstance,
-    setLogout,
-    setDeleteInvitation,
-    setupLoginController,
-  ]);
+  }, [setupGameController, appState.myUserToken, appState.sessionToken, videoInstance, setLogout, setDeleteInvitation, setupLoginController]);
   return (
     <CoveyAppContext.Provider value={appState}>
       <VideoContext.Provider value={Video.instance()}>

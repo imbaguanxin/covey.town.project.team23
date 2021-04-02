@@ -24,8 +24,9 @@ import React, { useCallback } from 'react';
 import { TownJoinResponse } from '../../classes/ServiceClient';
 import Video from '../../classes/Video/Video';
 import useCoveyAppState from '../../hooks/useCoveyAppState';
-import useVideoContext from '../VideoCall/VideoFrontend/hooks/useVideoContext/useVideoContext';
+import GoToTownListButton from '../Login/GoToTownListButton';
 import LogoutButton from '../Login/LogoutButton';
+import useVideoContext from '../VideoCall/VideoFrontend/hooks/useVideoContext/useVideoContext';
 
 interface TownLinkProps {
   doLogin: (initData: TownJoinResponse) => Promise<boolean>;
@@ -129,12 +130,13 @@ function TownLink({ doLogin, deleteInvitation }: TownLinkProps): JSX.Element {
 }
 
 interface InvitationProps {
-    doLogin: (initData: TownJoinResponse) => Promise<boolean>;
-    doLogout: () => Promise<boolean>;
-    deleteInvitation: (coveyTownID: string) => Promise<boolean>;
+  doLogin: (initData: TownJoinResponse) => Promise<boolean>;
+  doLogout: () => Promise<boolean>;
+  deleteInvitation: (coveyTownID: string) => Promise<boolean>;
+  goTownList: () => Promise<boolean>;
 }
 
-export default function UserInvitation({ doLogin, doLogout, deleteInvitation }: InvitationProps): JSX.Element {
+export default function UserInvitation({ doLogin, doLogout, deleteInvitation, goTownList }: InvitationProps): JSX.Element {
   /* eslint-disable no-use-before-define */
   return (
     <>
@@ -142,6 +144,7 @@ export default function UserInvitation({ doLogin, doLogout, deleteInvitation }: 
         <Flex h={16} alignItems='center' justifyContent='space-between'>
           <HStack spacing={8} alignItems='center'>
             <Box>TODO: Covey Logo</Box>
+            <GoToTownListButton goTownList={goTownList} />
           </HStack>
           <Flex alignItems='center'>
             <LogoutButton doLogout={doLogout} />
