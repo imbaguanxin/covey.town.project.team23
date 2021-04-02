@@ -35,7 +35,7 @@ export function TownLink({ doLogin, deleteInvitation }: InvitationProps): JSX.El
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { connect } = useVideoContext();
 
-  const { invitations, userName } = useCoveyAppState();
+  const { invitations, userName, currentTownID } = useCoveyAppState();
 
   const toast = useToast();
 
@@ -57,11 +57,18 @@ export function TownLink({ doLogin, deleteInvitation }: InvitationProps): JSX.El
   const handleAccept = useCallback(
     async (coveyRoomID: string) => {
       try {
-        const initData = await Video.setup(userName, coveyRoomID);
-        const loggedIn = await doLogin(initData);
-        if (loggedIn) {
-          assert(initData.providerVideoToken);
-          await connect(initData.providerVideoToken);
+        if (coveyRoomID === currentTownID) {
+          toast({
+            title: `You are already in the town you are trying to join!`,
+            status: 'info',
+          });
+        } else {
+          const initData = await Video.setup(userName, coveyRoomID);
+          const loggedIn = await doLogin(initData);
+          if (loggedIn) {
+            assert(initData.providerVideoToken);
+            await connect(initData.providerVideoToken);
+          }
         }
         onClose();
       } catch (err) {
