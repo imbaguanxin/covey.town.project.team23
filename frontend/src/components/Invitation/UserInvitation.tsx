@@ -81,7 +81,7 @@ function TownLink({ doLogin, deleteInvitation }: TownLinkProps): JSX.Element {
         });
       }
     },
-    [toast, connect, doLogin, userName],
+    [toast, connect, doLogin, userName, currentTownID, onClose],
   );
 
   const renderTown = (townID: string, friendlyName: string) => (

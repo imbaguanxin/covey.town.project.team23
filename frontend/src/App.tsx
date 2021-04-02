@@ -375,7 +375,7 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
         <VideoOverlay preferredMode='fullwidth' />
       </div>
     );
-  }, [setupGameController, appState.myUserToken, appState.sessionToken, videoInstance, setLogout, setDeleteInvitation, setupLoginController]);
+  }, [setupGameController, appState.myUserToken, appState.sessionToken, videoInstance, setLogout, setDeleteInvitation, setupLoginController, setupGoTownList]);
   return (
     <CoveyAppContext.Provider value={appState}>
       <VideoContext.Provider value={Video.instance()}>
