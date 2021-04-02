@@ -23,7 +23,7 @@ export default function LogoutButton({ doLogout }: LogoutProps): JSX.Element {
             name='action1'
             disabled={roomState === 'disconnected' && sessionToken.length > 0}
             onClick={async () => {
-      if (roomState != 'disconnected') {
+      if (roomState !== 'disconnected') {
         await room.disconnect();
       }
       await doLogout();

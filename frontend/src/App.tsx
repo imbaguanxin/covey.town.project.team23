@@ -322,15 +322,6 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
     [dispatchAppUpdate],
   );
 
-  const setupGoTownList = useCallback(async () => {
-    async function toTownList() {
-      dispatchAppUpdate({ action: 'goRoomList' });
-      return true;
-    }
-    await toTownList();
-    return true;
-  }, [dispatchAppUpdate]);
-
   const setupGameController = useCallback(
     async (initData: TownJoinResponse) => {
       await GameController(initData, dispatchAppUpdate);
@@ -363,7 +354,7 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
     if (!appState.sessionToken) {
       return (
         <div>
-          <UserInvitation doLogin={setupGameController} doLogout={setLogout} deleteInvitation={setDeleteInvitation} goTownList={setupGoTownList} />
+          <UserInvitation doLogin={setupGameController} doLogout={setLogout} deleteInvitation={setDeleteInvitation} />
           <Login doLogin={setupGameController} />
         </div>
       );
@@ -373,12 +364,12 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
     }
     return (
       <div>
-        <UserInvitation doLogin={setupGameController} doLogout={setLogout} deleteInvitation={setDeleteInvitation} goTownList={setupGoTownList} />
+        <UserInvitation doLogin={setupGameController} doLogout={setLogout} deleteInvitation={setDeleteInvitation} />
         <WorldMap />
         <VideoOverlay preferredMode='fullwidth' />
       </div>
     );
-  }, [setupGameController, appState.myUserToken, appState.sessionToken, videoInstance, setLogout, setDeleteInvitation, setupLoginController, setupGoTownList]);
+  }, [setupGameController, appState.myUserToken, appState.sessionToken, videoInstance, setLogout, setDeleteInvitation, setupLoginController]);
   return (
     <CoveyAppContext.Provider value={appState}>
       <VideoContext.Provider value={Video.instance()}>

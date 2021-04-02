@@ -116,7 +116,7 @@ export default function VideoGrid(props: Props) {
 
   return (
     <>
-      <Prompt when={roomState !== 'disconnected'} message='Are you sure you want to leave the video room?' />
+      {/* <Prompt when={roomState !== 'disconnected'} message='Are you sure you want to leave the video room?' /> */}
       <Container style={{ height: '100%' }} className='video-grid'>
         {roomState === 'disconnected' ? (
           // <PreJoinScreens room={{id: coveyRoom, twilioID: coveyRoom}} setMediaError={setMediaError} />

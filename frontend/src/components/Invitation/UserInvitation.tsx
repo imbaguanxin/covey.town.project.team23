@@ -9,6 +9,7 @@ import {
   DrawerOverlay,
   Flex,
   HStack,
+  Image,
   SimpleGrid,
   Table,
   Td,
@@ -91,10 +92,10 @@ function TownLink({ doLogin, deleteInvitation }: TownLinkProps): JSX.Element {
       <Td>
         <SimpleGrid columns={2} spacing='40px'>
           <Button leftIcon={<CheckIcon />} colorScheme='green' size='xs' onClick={() => handleAccept(townID)}>
-            accept
+            Join Town
           </Button>
           <Button leftIcon={<CloseIcon />} colorScheme='red' size='xs' onClick={() => handleDelete(townID)}>
-            deny
+            Delete Invitation
           </Button>
         </SimpleGrid>
       </Td>
@@ -133,18 +134,16 @@ interface InvitationProps {
   doLogin: (initData: TownJoinResponse) => Promise<boolean>;
   doLogout: () => Promise<boolean>;
   deleteInvitation: (coveyTownID: string) => Promise<boolean>;
-  goTownList: () => Promise<boolean>;
 }
 
-export default function UserInvitation({ doLogin, doLogout, deleteInvitation, goTownList }: InvitationProps): JSX.Element {
+export default function UserInvitation({ doLogin, doLogout, deleteInvitation }: InvitationProps): JSX.Element {
   /* eslint-disable no-use-before-define */
   return (
     <>
       <Box bg={useColorModeValue('gray.100', 'gray.900')} px={4}>
         <Flex h={16} alignItems='center' justifyContent='space-between'>
           <HStack spacing={8} alignItems='center'>
-            <Box>TODO: Covey Logo</Box>
-            <GoToTownListButton goTownList={goTownList} />
+            <GoToTownListButton />
           </HStack>
           <Flex alignItems='center'>
             <LogoutButton doLogout={doLogout} />

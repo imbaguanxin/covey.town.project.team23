@@ -3,11 +3,7 @@ import React from 'react';
 import useRoomState from '../VideoCall/VideoFrontend/hooks/useRoomState/useRoomState';
 import useVideoContext from '../VideoCall/VideoFrontend/hooks/useVideoContext/useVideoContext';
 
-interface LogoutProps {
-  goTownList: () => Promise<boolean>;
-}
-
-export default function GoToTownListButton({ goTownList }: LogoutProps): JSX.Element {
+export default function GoToTownListButton(): JSX.Element {
   const { room } = useVideoContext();
   const roomState = useRoomState();
 
@@ -18,7 +14,6 @@ export default function GoToTownListButton({ goTownList }: LogoutProps): JSX.Ele
       disabled={roomState === 'disconnected'}
       onClick={async () => {
         await room.disconnect();
-        // await goTownList();
       }}>
       Town List
     </Button>
