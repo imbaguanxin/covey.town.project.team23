@@ -63,6 +63,7 @@ export function TownLink({ doLogin, deleteInvitation }: InvitationProps): JSX.El
           assert(initData.providerVideoToken);
           await connect(initData.providerVideoToken);
         }
+        onClose();
       } catch (err) {
         toast({
           title: 'Unable to connect to Towns Service',
