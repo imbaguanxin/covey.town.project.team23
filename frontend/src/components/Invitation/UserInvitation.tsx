@@ -9,7 +9,6 @@ import {
   DrawerOverlay,
   Flex,
   HStack,
-  Image,
   SimpleGrid,
   Table,
   Td,
