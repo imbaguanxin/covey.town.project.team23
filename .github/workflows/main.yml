@@ -27,8 +27,8 @@ jobs:
           TWILIO_API_KEY_SID: ${{ secrets.TWILIO_API_KEY_SID }}
         run: cd services/roomService; npm install && npm test
 
-      - name: Build and test frontend components
-        run: cd frontend; npm install && npm test
+      - name: Build frontend components # Build and test frontend components
+        run: cd frontend; npm install
   deploy:
     if: github.ref == 'refs/heads/master'
     needs: build-and-test
