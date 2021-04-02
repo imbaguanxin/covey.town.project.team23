@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import {
   Box,
@@ -31,22 +31,21 @@ import useCoveyAppState from '../../hooks/useCoveyAppState';
 import useMaybeVideo from '../../hooks/useMaybeVideo';
 
 const TownInvitation: React.FunctionComponent = () => {
-  const {isOpen, onOpen, onClose} = useDisclosure();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const video = useMaybeVideo();
-  const {myUserID, currentTownID, apiClient} = useCoveyAppState();
+  const { myUserID, currentTownID, apiClient } = useCoveyAppState();
   const [availableUsers, setAvailableUsers] = useState<{ username: string; userID: string }[]>([]);
   const [invitationToken, setInvitationToken] = useState<string>('');
   const invitationUrl = `${process.env.REACT_APP_CLIENT_URL}/join/${invitationToken}`;
 
   const updateInvitationToken = useCallback(() => {
-    apiClient.getInvitationIDOfTown({townID: currentTownID}).then(res => {
+    apiClient.getInvitationIDOfTown({ townID: currentTownID }).then(res => {
       setInvitationToken(res.invitationID);
     });
   }, [currentTownID, apiClient]);
   const updateUserListings = useCallback(() => {
     apiClient.listUsers().then(res => {
-      setAvailableUsers(res.users.filter(user => user.userID !== myUserID)
-        .sort((a, b) => b.username.localeCompare(a.username)));
+      setAvailableUsers(res.users.filter(user => user.userID !== myUserID).sort((a, b) => b.username.localeCompare(a.username)));
     });
   }, [myUserID, setAvailableUsers, apiClient]);
   useEffect(() => {
@@ -70,39 +69,42 @@ const TownInvitation: React.FunctionComponent = () => {
   }, [onClose, video]);
 
   const handleCopy = useCallback(async () => {
-      try {
-        await navigator.clipboard.writeText(invitationUrl);
-        toast({
-            title: 'Copied to clipboard!',
-            status: 'success',
-        });
-      } catch (err) {
-        toast({
-            title: 'Failed to copy to clipboard!',
-            description: err.toString(),
-            status: 'error',
-        });
-      }
-  }, [invitationUrl, toast]);
-
-  const handleSendInvite = useCallback(async (userID: string) => {
     try {
-      await apiClient.inviteUserInSystem({
-        invitedUserID: userID,
-        coveyTownID: currentTownID,
-      });
+      await navigator.clipboard.writeText(invitationUrl);
       toast({
-        title: 'Invitation sent!',
+        title: 'Copied to clipboard!',
         status: 'success',
       });
     } catch (err) {
       toast({
-        title: 'Oops, something went wrong when senting the invitation.',
+        title: 'Failed to copy to clipboard!',
         description: err.toString(),
         status: 'error',
       });
     }
-  }, [currentTownID, apiClient, toast]);
+  }, [invitationUrl, toast]);
+
+  const handleSendInvite = useCallback(
+    async (userID: string) => {
+      try {
+        await apiClient.inviteUserInSystem({
+          invitedUserID: userID,
+          coveyTownID: currentTownID,
+        });
+        toast({
+          title: 'Invitation sent!',
+          status: 'success',
+        });
+      } catch (err) {
+        toast({
+          title: 'Oops, something went wrong when senting the invitation.',
+          description: err.toString(),
+          status: 'error',
+        });
+      }
+    },
+    [currentTownID, apiClient, toast],
+  );
 
   return (
     <>
@@ -110,10 +112,10 @@ const TownInvitation: React.FunctionComponent = () => {
         <Typography variant='body1'>Invite</Typography>
       </MenuItem>
       <Modal isOpen={isOpen} onClose={closeSettings}>
-        <ModalOverlay/>
+        <ModalOverlay />
         <ModalContent>
           <ModalHeader>Invite Other Users</ModalHeader>
-          <ModalCloseButton/>
+          <ModalCloseButton />
           <form>
             <ModalBody pb={6}>
               <FormLabel htmlFor='invitationLink'>Invite other users with this Link:</FormLabel>
@@ -130,9 +132,7 @@ const TownInvitation: React.FunctionComponent = () => {
                 <Box maxH='500px' overflowY='scroll' maxW='1000px'>
                   <FormLabel htmlFor='invitationIn'>Or invite them here if they are already here:</FormLabel>
                   <Table>
-                    <TableCaption placement='bottom'>
-                      {availableUsers.length > 0 ? 'Available users' : 'No available uers'}
-                    </TableCaption>
+                    <TableCaption placement='bottom'>{availableUsers.length > 0 ? 'Available users' : 'No available uers'}</TableCaption>
                     <Thead>
                       <Tr>
                         <Th>Name</Th>
@@ -146,9 +146,7 @@ const TownInvitation: React.FunctionComponent = () => {
                           <Td role='cell'>{userInfo.username}</Td>
                           <Td role='cell'>{userInfo.userID}</Td>
                           <Td role='cell'>
-                            <Button onClick={() => handleSendInvite(userInfo.userID)}>
-                              Invite
-                            </Button>
+                            <Button onClick={() => handleSendInvite(userInfo.userID)}>Invite</Button>
                           </Td>
                         </Tr>
                       ))}

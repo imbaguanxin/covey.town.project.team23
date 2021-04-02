@@ -1,9 +1,8 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
 import http, { Server } from 'http';
 import { AddressInfo } from 'net';
-import { Socket as ServerSocket } from 'socket.io';
 // eslint-disable-next-line import/no-extraneous-dependencies
 import { io, Socket } from 'socket.io-client';
+import { Socket as ServerSocket } from 'socket.io';
 import { CoveyTown, UserLocation } from '../CoveyTypes';
 
 export type RemoteServerPlayer = {

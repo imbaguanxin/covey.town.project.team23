@@ -16,18 +16,19 @@ export default function LogoutButton({ doLogout }: LogoutProps): JSX.Element {
   const { sessionToken } = useCoveyAppState();
 
   return (
-    <Button data-testid='logoutButton'
-            colorScheme='red'
-            mr={3}
-            value='logout'
-            name='action1'
-            disabled={roomState === 'disconnected' && sessionToken.length > 0}
-            onClick={async () => {
-      if (roomState !== 'disconnected') {
-        await room.disconnect();
-      }
-      await doLogout();
-    }}>
+    <Button
+      data-testid='logoutButton'
+      colorScheme='red'
+      mr={3}
+      value='logout'
+      name='action1'
+      disabled={roomState === 'disconnected' && sessionToken.length > 0}
+      onClick={async () => {
+        if (roomState !== 'disconnected') {
+          await room.disconnect();
+        }
+        await doLogout();
+      }}>
       Log Out
     </Button>
   );

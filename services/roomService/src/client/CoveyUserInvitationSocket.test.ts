@@ -62,8 +62,8 @@ describe('UserServiceApiSocket', () => {
     expect(userList.users.find(user => user.userID === userData.userID)).toBeUndefined();
   });
   describe('InviteAsInsideUser', () => {
-    let userData: { username: string, userID: string, userToken: string };
-    let townData: { coveyTownID: string, coveyTownPassword: string };
+    let userData: { username: string; userID: string; userToken: string };
+    let townData: { coveyTownID: string; coveyTownPassword: string };
 
     beforeAll(async () => {
       userData = await apiUserClient.createUser({ username: nanoid() });
@@ -95,7 +95,7 @@ describe('UserServiceApiSocket', () => {
       // Make a valid user socket
       const { socketConnected, invitationReceived } = TestUtils.createUserSocketClient(server, userData.userToken, userData.userID);
       await socketConnected;
-    
+
       // Receive invitation from a valid town
       await apiUserClient.inviteUserInSystem({
         invitedUserID: userData.userID,
