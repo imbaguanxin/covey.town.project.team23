@@ -1,24 +1,8 @@
 import { nanoid } from 'nanoid';
-import CoveyInvitationListener from '../types/CoveyInvitationListener';
 import CoveyTownsStore from './CoveyTownsStore';
 import CoveyUserController from './CoveyUserController';
 
 const mockInvitationListenerFns = jest.fn();
-
-function mockInvitationListener(): CoveyInvitationListener {
-  return {
-    getUserID(): string {
-      mockInvitationListenerFns();
-      return '';
-    },
-    onInvited(coveyTownID: string): void {
-      mockInvitationListenerFns(coveyTownID);
-    },
-    onDisconnect() {
-      mockInvitationListenerFns();
-    },
-  };
-}
 
 function createUserForTesting(usernameToUse?: string) {
   const username = usernameToUse !== undefined ? usernameToUse : `TestingUser=${nanoid()}`;
@@ -109,15 +93,15 @@ describe('CoveyUserController', () => {
     });
     it('Should not include deleted users', async () => {
       const user = createUserForTesting();
-      console.log(user);
-      console.log(CoveyUserController.getInstance().getUsers());
+      // console.log(user);
+      // console.log(CoveyUserController.getInstance().getUsers());
       const users = CoveyUserController.getInstance()
         .getUsers()
         .filter(userInfo => userInfo.username === user.username || userInfo.userID === user.userID);
       expect(users.length).toBe(1);
       const res = CoveyUserController.getInstance().deleteUser(user.userID);
       expect(res).toBe(true);
-      console.log(CoveyUserController.getInstance().getUsers());
+      // console.log(CoveyUserController.getInstance().getUsers());
       const usersPostDelete = CoveyUserController.getInstance()
         .getUsers()
         .filter(userInfo => userInfo.username === user.username || userInfo.userID === user.userID);

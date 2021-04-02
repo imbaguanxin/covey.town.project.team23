@@ -18,9 +18,6 @@ server.listen(process.env.PORT || 8081, () => {
   // eslint-disable-next-line no-console
   console.log(`Listening on ${address.port}`);
   if (process.env.DEMO_TOWN_ID) {
-    const newTown = CoveyTownsStore.getInstance().createTown(process.env.DEMO_TOWN_ID, false);
+    CoveyTownsStore.getInstance().createTown(process.env.DEMO_TOWN_ID, false);
   }
 });
-
-// const newTown = CoveyTownsStore.getInstance().createTown('DEMO TOWN', true);
-// console.log(`Demo town id: ${newTown.coveyTownID}`);

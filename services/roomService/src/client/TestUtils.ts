@@ -2,6 +2,7 @@
 import http, { Server } from 'http';
 import { AddressInfo } from 'net';
 import { Socket as ServerSocket } from 'socket.io';
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { io, Socket } from 'socket.io-client';
 import { CoveyTown, UserLocation } from '../CoveyTypes';
 
@@ -30,16 +31,16 @@ export function cleanupSockets(): void {
 export function createSocketClient(
   server: http.Server,
   path: string,
-  auth?: object | ((cb: (data: object) => void) => void),
+  auth?: Record<string, unknown> | ((cb: (data: Record<string, unknown>) => void) => void),
 ): {
-  socket: Socket;
-  socketConnected: Promise<void>;
-  socketDisconnected: Promise<void>;
-  playerMoved: Promise<RemoteServerPlayer>;
-  newPlayerJoined: Promise<RemoteServerPlayer>;
-  playerDisconnected: Promise<RemoteServerPlayer>;
-  invitationReceived: Promise<CoveyTown>;
-} {
+    socket: Socket;
+    socketConnected: Promise<void>;
+    socketDisconnected: Promise<void>;
+    playerMoved: Promise<RemoteServerPlayer>;
+    newPlayerJoined: Promise<RemoteServerPlayer>;
+    playerDisconnected: Promise<RemoteServerPlayer>;
+    invitationReceived: Promise<CoveyTown>;
+  } {
   const address = server.address() as AddressInfo;
   const socket = io(`http://localhost:${address.port}`, {
     path,
@@ -106,13 +107,13 @@ export function createTownSocketClient(
   sessionToken: string,
   coveyTownID: string,
 ): {
-  socket: Socket;
-  socketConnected: Promise<void>;
-  socketDisconnected: Promise<void>;
-  playerMoved: Promise<RemoteServerPlayer>;
-  newPlayerJoined: Promise<RemoteServerPlayer>;
-  playerDisconnected: Promise<RemoteServerPlayer>;
-} {
+    socket: Socket;
+    socketConnected: Promise<void>;
+    socketDisconnected: Promise<void>;
+    playerMoved: Promise<RemoteServerPlayer>;
+    newPlayerJoined: Promise<RemoteServerPlayer>;
+    playerDisconnected: Promise<RemoteServerPlayer>;
+  } {
   const { socket, socketConnected, socketDisconnected, playerMoved, newPlayerJoined, playerDisconnected } = createSocketClient(server, '/town', { token: sessionToken, coveyTownID });
   return {
     socket,
@@ -129,11 +130,11 @@ export function createUserSocketClient(
   userToken: string,
   userID: string,
 ): {
-  socket: Socket;
-  socketConnected: Promise<void>;
-  socketDisconnected: Promise<void>;
-  invitationReceived: Promise<CoveyTown>;
-} {
+    socket: Socket;
+    socketConnected: Promise<void>;
+    socketDisconnected: Promise<void>;
+    invitationReceived: Promise<CoveyTown>;
+  } {
   const { socket, socketConnected, socketDisconnected, invitationReceived } = createSocketClient(server, '/user', { token: userToken, userID });
   return {
     socket,

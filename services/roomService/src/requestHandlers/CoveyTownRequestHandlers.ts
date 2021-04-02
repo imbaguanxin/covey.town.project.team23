@@ -109,7 +109,7 @@ export async function townJoinHandler(requestData: TownJoinRequest): Promise<Res
     return {
       isOK: false,
       message: 'Error: Max capacity at town',
-    }
+    };
   }
   const newPlayer = new Player(requestData.userName);
   const newSession = await coveyTownController.addPlayer(newPlayer);
