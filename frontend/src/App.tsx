@@ -2,7 +2,7 @@ import { ChakraProvider } from '@chakra-ui/react';
 import { MuiThemeProvider } from '@material-ui/core/styles';
 import assert from 'assert';
 import React, { Dispatch, SetStateAction, useCallback, useEffect, useMemo, useReducer, useState } from 'react';
-import { BrowserRouter as Router, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { io, Socket } from 'socket.io-client';
 import './App.css';
 import Player, { ServerPlayer, UserLocation } from './classes/Player';
@@ -344,10 +344,16 @@ function App(props: { setOnDisconnect: Dispatch<SetStateAction<Callback | undefi
     if (!appState.myUserToken) {
       return (
         <div>
-          <Route path='/' exact>
-            <UserCreation doLogin={setupLoginController} />
-          </Route>
-          <Route path='/join/:invitationToken' render={prop => <UserLinkJoin userLogin={setupLoginController} townLogin={setupGameController} params={prop.match.params} />} />
+          <Router>
+            <Switch>
+              <Route exact path='/'>
+                <UserCreation doLogin={setupLoginController} />
+              </Route>
+              <Route path='/join/:invitationToken' render={prop => <UserLinkJoin userLogin={setupLoginController} townLogin={setupGameController} params={prop.match.params} />} />
+            </Switch>
+          </Router>
+
+          {/* <Route exact path='/' render={prop => <UserEnter userLogin={setupLoginController} townLogin={setupGameController} params={prop.match.location} />}> */}
         </div>
       );
     }
