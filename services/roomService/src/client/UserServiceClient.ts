@@ -94,7 +94,6 @@ export default class UserServiceClient {
     throw new Error(`Error processing request: ${response.data.message}`);
   }
 
-  // TODO: making axios requests
   async createUser(requestData: CreateUserBodyRequest): Promise<CreateUserBodyResponse> {
     const responseWrapper = await this._axios.post<ResponseEnvelope<CreateUserBodyResponse>>('/user', requestData);
     return UserServiceClient.unwrapOrThrowError(responseWrapper);

@@ -23,7 +23,6 @@ export default function addUserInvitationRoutes(http: Server, app: Express): io.
   });
 
   /**
-   * TODO
    * Create a user
    */
   app.post('/user', BodyParser.json(), async (req, res) => {

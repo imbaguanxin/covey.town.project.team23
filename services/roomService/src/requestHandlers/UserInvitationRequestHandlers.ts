@@ -35,7 +35,7 @@ export async function userListHandler(): Promise<ResponseEnvelope<UserListRespon
 }
 
 /**
- *
+ * A handler get the invitation ID of a town
  * @param requestData
  * @returns
  */
@@ -50,7 +50,7 @@ export async function getInvitationLinkHandler(requestData: GetInvitationLinkReq
 }
 
 /**
- *
+ * A handler that search the townID according to a InvitationID
  * @param requestData
  * @returns
  */
@@ -70,6 +70,11 @@ export async function joinLinkHandler(requestData: JoinLinkRequest): Promise<Res
   };
 }
 
+/**
+ * Invites a user to a given town
+ * @param requestData 
+ * @returns 
+ */
 export async function inviteUserInSystemHandler(requestData: InviteUserInSystemRequest): Promise<ResponseEnvelope<Record<string, null>>> {
   const userController = CoveyUserController.getInstance();
   const result = userController.inviteUser(requestData.invitedUserID, requestData.coveyTownID);
@@ -80,6 +85,10 @@ export async function inviteUserInSystemHandler(requestData: InviteUserInSystemR
   };
 }
 
+/**
+ * User invitation subscription handler
+ * @param socket 
+ */
 export function userSubscriptionHandler(socket: Socket): void {
   const { userID, token } = socket.handshake.auth as { userID: string; token: string };
   const userController = CoveyUserController.getInstance();
