@@ -111,7 +111,7 @@ const TownInvitation: React.FunctionComponent = () => {
       <MenuItem data-testid='openMenuButton' onClick={openSettings}>
         <Typography variant='body1'>Invite</Typography>
       </MenuItem>
-      <Modal isOpen={isOpen} onClose={closeSettings}>
+      <Modal isOpen={isOpen} onClose={closeSettings} size='lg'>
         <ModalOverlay />
         <ModalContent>
           <ModalHeader>Invite Other Users</ModalHeader>
