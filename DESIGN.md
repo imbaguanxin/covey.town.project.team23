@@ -245,37 +245,6 @@ We added services related to user, invitation and tried to keep all the original
 
 <table>
   <tr>
-    <td colspan='2'><b>Function: </b></td>
-  </tr>
-  <tr>
-    <td><b>Responsibilities:</b></td>
-    <td><b>Collaborators:</b></td>
-  </tr>
-  <tr>
-    <td rowspan='2'></td>
-    <td>Template</td>
-  </tr>
-  <tr><td>Template</td></tr>
-</table>
-
-<table>
-  <tr>
-    <td colspan='2'><b>Interface: Props</b></td>
-  </tr>
-  <tr colspan='2'><b>States: </b></tr>
-  <tr>
-    <td><b>Responsibilities:</b></td>
-    <td><b>Collaborators:</b></td>
-  </tr>
-  <tr>
-    <td rowspan='2'>This interface manages the props of </td>
-    <td>Template</td>
-  </tr>
-  <tr><td>Template</td></tr>
-</table>
-
-<table>
-  <tr>
     <td colspan='2'><b>Function: App</b></td>
   </tr>
   <tr>
@@ -335,7 +304,7 @@ We added services related to user, invitation and tried to keep all the original
     <td><b>Collaborators:</b></td>
   </tr>
   <tr>
-    <td rowspan='4'>This components is a menu bar at the top of the page consisting of a "To Town List" button directing to the TownSelection page, a "Log out" button clearing all states back to default and direct to the UserCreation page, and a drop down list, the component "TownLink", lists all the names and IDs of towns that sent invitations to this user with a button to join the coresponding town and a button to delete the invitation.</td>
+    <td rowspan='5'>This components is a menu bar at the top of the page consisting of a "To Town List" button directing to the TownSelection page, a "Log out" button clearing all states back to default and direct to the UserCreation page, and a drop down list, the component "TownLink", lists all the names and IDs of towns that sent invitations to this user with a button to join the coresponding town and a button to delete the invitation.</td>
     <td>InvitationProps</td>
   </tr>
   <tr><td>GoToTownListButton</td></tr>
