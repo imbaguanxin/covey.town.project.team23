@@ -41,7 +41,17 @@ The backend will automatically restart if you change any of the files in the `se
 
 Create a `.env` file in the `frontend` directory, with the line: `REACT_APP_TOWNS_SERVICE_URL=http://localhost:8081` (if you deploy the rooms/towns service to another location, put that location here instead)
 
+**Additionally, add the line `REACT_APP_CLIENT_URL=http://localhost:3000`** This line is telling the app about the URL of the frontend. (If you are using the frontend on a different location, put that location instead)
+
 ### Running the frontend
 
 In the `frontend` directory, run `npm start` (again, you'll need to run `npm install` the very first time). After several moments (or minutes, depending on the speed of your machine), a browser will open with the frontend running locally.
 The frontend will automatically re-compile and reload in your browser if you change any files in the `frontend/src` directory.
+
+## Deploy the app on Heroku and Netlify
+
+All the things are similar to the instruction on Activitiy 10.1, except for:
+
+1. When deploying applicaiton on Netlify, create the environment variable `REACT_APP_CLIENT_URL`, the value is the URL of the application launched on Netlify. The value should look like `https://xxxxx-yyyyy-zzzzzzz.netlify.app`
+
+2. Add a file called `_redirects` in the public folder with the content: `/* /index.html 200 `. Since our application is using different routes to handle Joins, we need to direct URLs to our application.

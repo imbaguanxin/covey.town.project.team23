@@ -76,45 +76,60 @@ export interface TownUpdateRequest {
 }
 
 /**
- * TODO
+ * payload sent by client to see the invitationLink of a town
  */
 export interface GetInvitationLinkRequest {
   coveyTownID: string;
 }
 
 /**
- * TODO
+ * response from the server of a GetInvitaitonLinkRequest 
  */
 export interface GetInvitationLinkResponse {
   invitationID: string;
 }
 
 /**
- * TODO
+ * response from the server of a getUserList request
  */
 export interface UserListResponse {
   users: CoveyUserList;
 }
 
+/**
+ * payload sent by client for Join Link (join as a outside user)
+ */
 export interface JoinLinkRequest {
   invitationID: string;
 }
 
+/**
+ * response from the server of a JoinLinkRequest
+ */
 export interface JoinLinkResponse {
   coveyTownID: string;
   friendlyName: string;
 }
 
+/**
+ * payload sent by client for creating a username
+ */
 export interface UserCreateRequest {
   username: string;
 }
 
+/**
+ * response from the server of a UserCreatingRequest
+ */
 export interface UserCreateResponse {
   username: string;
   userID: string;
   userToken: string;
 }
 
+/**
+ * payload sent by client to invite a user already in the system to a existing town
+ */
 export interface InviteUserInSystemRequest {
   invitedUserID: string;
   coveyTownID: string;
