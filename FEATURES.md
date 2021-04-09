@@ -1,6 +1,5 @@
-> This file  is from repository is from project [repository](https://github.com/imbaguanxin/covey.town.project.team23.git) of CS 5500, group 23. 
 # Features
-group 23
+
 
 ## Feature Introduction
 
