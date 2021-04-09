@@ -118,7 +118,7 @@ export default class CoveyUserController {
     return true;
   }
 
-/**
+  /**
  * Connect a socket to this controller
  * We use a userToken here since everyone can use listUser() to get the user id. Simply relying on userID might lead to replication of socket registration.
  * @param userID the userID of the new comming user
