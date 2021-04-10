@@ -6,8 +6,8 @@ import CoveyTownsStore from './CoveyTownsStore';
 /**
  * An adapter between CoveyUserController's event interface (CoveyInvitationListener) and the Socket
  * @param socket the Socket object that we use to communivate the player
- * @param userID the userID of the socket's owner 
- * @returns 
+ * @param userID the userID of the socket's owner
+ * @returns
  */
 function socketAdapter(socket: Socket, userID: string): CoveyInvitationListener {
   return {
@@ -52,7 +52,7 @@ export default class CoveyUserController {
   }
 
   /** Find the user information by userID
-   * 
+   *
    * @param id
    */
   getUserByID(id: string): CoveyUser | undefined {
@@ -67,7 +67,7 @@ export default class CoveyUserController {
   }
 
   /** Create a user with a given username, returns username, userID and userToken. userToken is for socket subscripition.
-   * 
+   *
    * @param username
    */
   createUser(username: string): CoveyCreateUser {
@@ -97,7 +97,7 @@ export default class CoveyUserController {
   }
 
   /** Send a invitation from a given Town to a given user
-   * 
+   *
    * @param userID the invited user
    * @param coveyTownID the town which the user is invited to
    */
@@ -118,13 +118,12 @@ export default class CoveyUserController {
     return true;
   }
 
-  /**
- * Connect a socket to this controller
- * We use a userToken here since everyone can use listUser() to get the user id. Simply relying on userID might lead to replication of socket registration.
- * @param userID the userID of the new comming user
- * @param userToken the userToken of the new comming user
- * @param socket the socket provided by user
- */
+  /** Connect a socket to this controller
+   * We use a userToken here since everyone can use listUser() to get the user id. Simply relying on userID might lead to replication of socket registration.
+   * @param userID the userID of the new comming user
+   * @param userToken the userToken of the new comming user
+   * @param socket the socket provided by user
+   */
   connect(userID: string, userToken: string, socket: Socket): void {
     const activeUser = this.findUserByID(userID);
     if (activeUser === undefined) {

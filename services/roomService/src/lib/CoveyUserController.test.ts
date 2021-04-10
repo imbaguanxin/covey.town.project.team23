@@ -1,8 +1,9 @@
+import { mock } from 'jest-mock-extended';
 import { nanoid } from 'nanoid';
+import { Socket } from 'socket.io';
+import CoveyInvitationListener from '../types/CoveyInvitationListener';
 import CoveyTownsStore from './CoveyTownsStore';
 import CoveyUserController from './CoveyUserController';
-
-const mockInvitationListenerFns = jest.fn();
 
 function createUserForTesting(usernameToUse?: string) {
   const username = usernameToUse !== undefined ? usernameToUse : `TestingUser=${nanoid()}`;
@@ -14,10 +15,17 @@ function createTownForTesting(friendlyNameToUse?: string, isPublic = false) {
   return CoveyTownsStore.getInstance().createTown(friendlyName, isPublic);
 }
 
+function createMockListener(userID: string): CoveyInvitationListener {
+  const mockListener = {
+    getUserID: () => userID,
+    onInvited: jest.fn(),
+    onDisconnect: jest.fn(),
+  };
+  CoveyUserController.getInstance().addListner(mockListener);
+  return mockListener;
+}
+
 describe('CoveyUserController', () => {
-  beforeEach(() => {
-    mockInvitationListenerFns.mockClear();
-  });
   it('should be a singleton', () => {
     const store1 = CoveyUserController.getInstance();
     const store2 = CoveyUserController.getInstance();
@@ -29,13 +37,12 @@ describe('CoveyUserController', () => {
       const res = CoveyUserController.getInstance().getUserByID('');
       expect(res).toBe(undefined);
     });
-    // it('Should get the user with the correct userID', async () => {
-    //   const user = createUserForTesting();
-    //   const res = CoveyUserController.getInstance().getUserByID(user.userID);
-    //   console.log(res);
-    //   expect(res.userID).toBe(user.userID);
-    //   expect(res.username).toBe(user.username);
-    // });
+    it('Should get the user with the correct userID', async () => {
+      const user = createUserForTesting();
+      const userResponse = CoveyUserController.getInstance().getUserByID(user.userID);
+      expect(userResponse?.userID).toBe(user.userID);
+      expect(userResponse?.username).toBe(user.username);
+    });
   });
 
   describe('createUser', () => {
@@ -54,6 +61,15 @@ describe('CoveyUserController', () => {
       const res = CoveyUserController.getInstance().deleteUser('');
       expect(res).toBe(false);
     });
+    it('Should delete user according user', async () => {
+      const user1 = createUserForTesting('user1');
+      const user2 = createUserForTesting('user2');
+      const userController = CoveyUserController.getInstance();
+      userController.deleteUser(user1.userID);
+      const userIDList = userController.getUsers().map(user => user.userID);
+      expect(userIDList).toContain(user2.userID);
+      expect(userIDList).not.toContain(user1.userID);
+    });
   });
 
   describe('inviteUser', () => {
@@ -62,10 +78,22 @@ describe('CoveyUserController', () => {
       const res = CoveyUserController.getInstance().inviteUser('', town.coveyTownID);
       expect(res).toBe(false);
     });
+    it('Should notify the according user if the user if exists', async () => {
+      const town = createTownForTesting();
+      const user1 = createUserForTesting('user1');
+      const listener1 = createMockListener(user1.userID);
+      const user2 = createUserForTesting('user2');
+      const listener2 = createMockListener(user2.userID);
+
+      const userController = CoveyUserController.getInstance();
+      userController.inviteUser(user1.userID, town.coveyTownID);
+      expect(listener1.onInvited).toBeCalledWith(town.coveyTownID, town.friendlyName);
+      expect(listener2.onInvited).not.toBeCalled();
+    });
   });
 
   describe('listUsers', () => {
-    it('Should include all users', async () => {
+    it('Should include newly added users', async () => {
       const user = createUserForTesting();
       const users = CoveyUserController.getInstance().getUsers();
       const entry = users.filter(userInfo => userInfo.userID === user.userID);
@@ -93,19 +121,33 @@ describe('CoveyUserController', () => {
     });
     it('Should not include deleted users', async () => {
       const user = createUserForTesting();
-      // console.log(user);
-      // console.log(CoveyUserController.getInstance().getUsers());
-      const users = CoveyUserController.getInstance()
+      const userIDs = CoveyUserController.getInstance()
         .getUsers()
-        .filter(userInfo => userInfo.username === user.username || userInfo.userID === user.userID);
-      expect(users.length).toBe(1);
+        .map(u => u.userID);
+      expect(userIDs).toContain(user.userID);
+
       const res = CoveyUserController.getInstance().deleteUser(user.userID);
       expect(res).toBe(true);
-      // console.log(CoveyUserController.getInstance().getUsers());
+
       const usersPostDelete = CoveyUserController.getInstance()
         .getUsers()
-        .filter(userInfo => userInfo.username === user.username || userInfo.userID === user.userID);
-      expect(usersPostDelete.length).toBe(0);
+        .map(u => u.userID);
+      expect(usersPostDelete).not.toContain(user.userID);
+    });
+  });
+
+  describe('connect', () => {
+    it('should not connect if the userID is not correct', async () => {
+      const user1 = createUserForTesting();
+      const mockSocket = mock<Socket>();
+      CoveyUserController.getInstance().connect(nanoid(), user1.userToken, mockSocket);
+      expect(mockSocket.disconnect).toBeCalledWith(true);
+    });
+    it('should not connect if the userToken is not correct', async () => {
+      const user1 = createUserForTesting();
+      const mockSocket = mock<Socket>();
+      CoveyUserController.getInstance().connect(user1.userID, nanoid(), mockSocket);
+      expect(mockSocket.disconnect).toBeCalledWith(true);
     });
   });
 });
