@@ -57,6 +57,14 @@ describe('CoveyTownsStore', () => {
     });
   });
 
+  describe('getControllerFromInvitationID', () => {
+    it('Should return the same controller on the same InvitationID', async () => {
+      const town = createTownForTesting();
+      expect(town).toBe(CoveyTownsStore.getInstance().getControllerFromInvitationID(town.invitationID));
+      expect(town).toBe(CoveyTownsStore.getInstance().getControllerFromInvitationID(town.invitationID));
+    });
+  });
+
   describe('updateTown', () => {
     it('Should check the password before updating any value', () => {
       const town = createTownForTesting();

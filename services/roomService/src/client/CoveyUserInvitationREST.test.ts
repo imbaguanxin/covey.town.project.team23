@@ -16,7 +16,6 @@ function unwrapResponse<T>(response: ResponseEnvelope<T>): T {
   assert(response.response);
   return response.response;
 }
-
 describe('UserInvitationServiceAPIREST', () => {
   /* A testing server that will be deployed before testing and reused throughout all of the tests */
   let server: http.Server;
@@ -106,6 +105,11 @@ describe('UserInvitationServiceAPIREST', () => {
   });
 
   describe('ListUserAPI', () => {
+    it('List user API should remain the same.', async () => {
+      const listResponse = await apiClient.listUsers();
+      const listResponse2 = await apiClient.listUsers();
+      listResponse2.users.map(u => u.userID).forEach(id => expect(listResponse.users.map(u => u.userID)).toContain(id));
+    });
     it('List user API should list refresh after creating new users', async () => {
       const initLength = (await apiClient.listUsers()).users.length;
 
