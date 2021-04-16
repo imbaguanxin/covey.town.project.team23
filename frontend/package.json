@@ -32,6 +32,7 @@
     "nanoid": "^3.1.12",
     "node-sass": "^4.14.1",
     "normalize.css": "^8.0.1",
+    "npm-pack-zip": "^1.2.9",
     "phaser": "^3.53.1",
     "react": "^17.0.1",
     "react-context-mutex": "^1.0.8",
@@ -53,7 +54,8 @@
     "test": "cross-env DEBUG_PRINT_LIMIT=0 jest",
     "eject": "react-scripts eject",
     "format": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
-    "lint": "eslint . --ext .js,.jsx,.ts,.tsx "
+    "lint": "eslint . --ext .js,.jsx,.ts,.tsx ",
+    "pack": "npm-pack-zip"
   },
   "eslintConfig": {
     "extends": [

@@ -6,7 +6,8 @@
   "scripts": {
     "heroku-postbuild": "cd services/roomService && npm ci && npm run build",
     "run-services-actions": "heroku local -p 3001 web",
-    "lint": "cd services/roomService && npm run-script lint && cd ../../frontend && npm run-script lint"
+    "lint": "cd services/roomService && npm run-script lint && cd ../../frontend && npm run-script lint",
+    "pack": "npm-pack-zip"
   },
   "repository": {
     "type": "git",
@@ -46,6 +47,7 @@
   },
   "dependencies": {
     "@types/ramda": "^0.27.34",
+    "npm-pack-zip": "^1.2.9",
     "ramda": "^0.27.1",
     "typescript-is": "^0.17.0"
   }
