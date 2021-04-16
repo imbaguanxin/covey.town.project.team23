@@ -190,370 +190,48 @@ We modified the frontend of Covey.Town so that it supports users and invitations
 
 We added services related to user, invitation and tried to keep all the original designs. We have designed to have a separated socket (user socekt) to deal with invitation activities (i.e. receive invitation from other other users) with the backend, aside from the original one dealing with town activities (town socket). Therefore, two sockets are created to capture different paths, where the town socket capturing `/town`, and the user socket capturing `/user`. The user socket is created after getting a valid response of creating a user from backend and is set to listening for `'invitedToTown'` from backend.
 
-### CRC cards
+Here's a graph showing the achitecture of frontend components related to our project.
 
-<table>
-  <tr>
-    <td colspan='2'><b>Function: App</b></td>
-  </tr>
-  <tr>
-    <td><b>Responsibilities:</b></td>
-    <td><b>Collaborators:</b></td>
-  </tr>
-  <tr>
-    <td rowspan='6'>According to current states, place components on the page.</td>
-    <td>appStateReducer</td>
-  </tr>
-  <tr><td>UserCreation</td></tr>
-  <tr><td>UserInvitation</td></tr>
-  <tr><td>UserLinkJoin</td></tr>
-  <tr><td>loginController</td></tr>
-  <tr><td>Video</td></tr>
-</table>
+![](docs/FrontendArchitecture.png)
 
-<table>
-  <tr>
-    <td colspan='2'><b>Function: UserCreation</b></td>
-  </tr>
-  <tr colspan='2'><b>States: newUserName</b></tr>
-  <tr>
-    <td><b>Responsibilities:</b></td>
-    <td><b>Collaborators:</b></td>
-  </tr>
-  <tr>
-    <td rowspan='3'>This page has a text input box with some welcoming messages to let user to type in a username and direct user to the town listing page after clicking the "Create" button that is also on this page.</td>
-    <td>UserCreationProps</td>
-  </tr>
-  <tr><td>CoveyAppStates.apiClient</td></tr>
-  <tr><td>App</td></tr>
-</table>
+### React Components
 
-<table>
-  <tr>
-    <td colspan='2'><b>Interface: UserCreationProps</b></td>
-  </tr>
-  <tr colspan='2'><b>States: doLogin</b></tr>
-  <tr>
-    <td><b>Responsibilities:</b></td>
-    <td><b>Collaborators:</b></td>
-  </tr>
-  <tr>
-    <td rowspan='2'>This interface manages the props of UserCreation</td>
-    <td>UserCreation</td>
-  </tr>
-  <tr><td>CreateUserBodyResponse</td></tr>
-</table>
+#### UserCreation
 
-<table>
-  <tr>
-    <td colspan='2'><b>Function: UserInvitation</b></td>
-  </tr>
-  <tr>
-    <td><b>Responsibilities:</b></td>
-    <td><b>Collaborators:</b></td>
-  </tr>
-  <tr>
-    <td rowspan='5'>This components is a menu bar at the top of the page consisting of a "To Town List" button directing to the TownSelection page, a "Log out" button clearing all states back to default and direct to the UserCreation page, and a drop down list, the component "TownLink", lists all the names and IDs of towns that sent invitations to this user with a button to join the coresponding town and a button to delete the invitation.</td>
-    <td>InvitationProps</td>
-  </tr>
-  <tr><td>GoToTownListButton</td></tr>
-  <tr><td>LogoutButton</td></tr>
-  <tr><td>TownLink</td></tr>
-  <tr><td>App</td></tr>
-</table>
+This page has a text input box with some welcoming messages to let user to type in a username and a "Create" button. After hitting the "Create" button, the frontend will request the Invitation REST service to create a user and direct user to the TownSelection page.
 
-<table>
-  <tr>
-    <td colspan='2'><b>Interface: UserInvitationProps</b></td>
-  </tr>
-  <tr colspan='2'><b>States: doLogin, doLogout, deleteInvitation</b></tr>
-  <tr>
-    <td><b>Responsibilities:</b></td>
-    <td><b>Collaborators:</b></td>
-  </tr>
-  <tr>
-    <td rowspan='2'>This interface manages the props of UserInvitation</td>
-    <td>UserInvitation</td>
-  </tr>
-  <tr><td>TownJoinResponse</td></tr>
-</table>
+#### UserInvitation
 
-<table>
-  <tr>
-    <td colspan='2'><b>Function: TownLink</b></td>
-  </tr>
-  <tr>
-    <td><b>Responsibilities:</b></td>
-    <td><b>Collaborators:</b></td>
-  </tr>
-  <tr>
-    <td rowspan='6'>This components is a drop down list consisiting of all the names and IDs of towns that sent invitations to this user with a button to join the coresponding town and a button to delete the invitation</td>
-    <td>TownLinkProps</td>
-  </tr>
-  <tr><td>IVideoContext.connect</td></tr>
-  <tr><td>CoveyAppState.invitations</td></tr>
-  <tr><td>CoveyAppState.userName</td></tr>
-  <tr><td>CoveyAppState.currentTownID</td></tr>
-  <tr><td>UserInvitation</td></tr>
-</table>
+This components is a menu bar at the top of the page consisting of a "To Town List" button, a "Log out" button, and a drop down list, the component "TownLink", lists all the names and IDs of towns that sent invitations to this user with a button to join the coresponding town and a button to delete the invitation. The "To Town List" button would diconnect user from the town the user is in, and would be disabled if user is already in TownSelection page. The "Logout button" would disconnect user from backend totally, clear all states back to default and direct to the UserCreation page.
 
-<table>
-  <tr>
-    <td colspan='2'><b>Interface: TownLinkProps</b></td>
-  </tr>
-  <tr colspan='2'><b>States: doLogin, deleteInvitation</b></tr>
-  <tr>
-    <td><b>Responsibilities:</b></td>
-    <td><b>Collaborators:</b></td>
-  </tr>
-  <tr>
-    <td rowspan='2'>This interface manages the props of TownLink</td>
-    <td>UserInvitation</td>
-  </tr>
-  <tr><td>TownJoinResponse</td></tr>
-</table>
+#### TownLink
 
-<table>
-  <tr>
-    <td colspan='2'><b>Function: UserLinkJoin</b></td>
-  </tr>
-  <tr colspan='2'><b>States: newUserName, invitedTownID, invitedTownName</b></tr>
-  <tr>
-    <td><b>Responsibilities:</b></td>
-    <td><b>Collaborators:</b></td>
-  </tr>
-  <tr>
-    <td rowspan='6'>This page has similar layout and functionalities with the UserCreation, but it has a invitation token passed in the props that relates to a specific town. User would directly join the town after typing in a valid user name in the text input box and click the "Create" button.</td>
-    <td>UserLinkJoinProps</td>
-  </tr>
-  <tr><td>CoveyAppState.invitationSocket</td></tr>
-  <tr><td>CoveyAppState.townSocket</td></tr>
-  <tr><td>CoveyAppState.apiClient</td></tr>
-  <tr><td>IVideoContext.connect</td></tr>
-  <tr><td>App</td></tr>
-</table>
+This components is a drop down list consisiting of all the names and IDs of towns that sent invitations to this user with a button to join the coresponding town and a button to delete the invitation. This component would be refreshed when backend send invitation messages to frontend through websocket with path `/user`.
 
-<table>
-  <tr>
-    <td colspan='2'><b>Interface: UserLinkJoinProps</b></td>
-  </tr>
-  <tr colspan='2'><b>States: userLogin, townLogin, params</b></tr>
-  <tr>
-    <td><b>Responsibilities:</b></td>
-    <td><b>Collaborators:</b></td>
-  </tr>
-  <tr>
-    <td rowspan='3'>This interface manages the props of UserLinkJoin</td>
-    <td>UserLinkJoin</td>
-  </tr>
-  <tr><td>CreateUserBodyResponse</td></tr>
-  <tr><td>TownJoinResponse</td></tr>
-</table>
+#### GoToTownListButton
 
-<table>
-  <tr>
-    <td colspan='2'><b>Function: loginController</b></td>
-  </tr>
-  <tr>
-    <td><b>Responsibilities:</b></td>
-    <td><b>Collaborators:</b></td>
-  </tr>
-  <tr>
-    <td rowspan='2'>Set up a socket capturing `/user` and listening for `'invitedToTown'` from backend and update CoveyAppStates according to arguments. This function has similar functionality with GameController and should also be used similarly but has different, unrelated arguments.</td>
-    <td>CreateUserBodyResponse</td>
-  </tr>
-  <tr><td>socket.io-client.io</td></tr>
-</table>
+This component is a button that would exit current town by disconnecting from the websocket with path `/town` and back to the TownSelection page upon clicking. This component would be disabled when `IVideoContext.room` is not connected since user would then either have already been on the TownSelection page or have not entered a username.
 
-<table>
-  <tr>
-    <td colspan='2'><b>Class: ServiceClient</b></td>
-  </tr>
-  <tr>
-    <td><b>Responsibilities:</b></td>
-    <td><b>Collaborators:</b></td>
-  </tr>
-  <tr>
-    <td rowspan='5'>Construct a Service API client. Specify a serviceURL for testing, or otherwise defaults to the URL at the environmental variable REACT_APP_ROOMS_SERVICE_URL. Deal with all communications to the backend through REST API. This class was originally "TownsServiceClient".</td>
-    <td>ResponseEnvelope</td>
-  </tr>
-  <tr><td>GetInvitationIDBodyRequest</td></tr>
-  <tr><td>JoinInvitationBodyRequest</td></tr>
-  <tr><td>TownUpdateRequest</td></tr>
-  <tr><td>TownDeleteRequest</td></tr>
-</table>
+#### LogoutButton
 
-<table>
-  <tr>
-    <td colspan='2'><b>Interface: CreateUserBodyRequest</b></td>
-  </tr>
-  <tr colspan='2'><b>States: username</b></tr>
-  <tr>
-    <td><b>Responsibilities:</b></td>
-    <td><b>Collaborators:</b></td>
-  </tr>
-  <tr>
-    <td rowspan='1'>This interface manages the structure of the body of the POST request to `/user` creating a user.</td>
-    <td>None</td>
-  </tr>
-</table>
+This component is a button that would diconnect all connections, clear all states back to default, and back to the UserCreation page upon clicking. This component should be disabled exactly when `IVideoContext.room` is trying to, but have not yet, connect to twilio.
 
-<table>
-  <tr>
-    <td colspan='2'><b>Interface: CreateUserBodyResponse</b></td>
-  </tr>
-  <tr colspan='2'><b>States: username, userID, userToken</b></tr>
-  <tr>
-    <td><b>Responsibilities:</b></td>
-    <td><b>Collaborators:</b></td>
-  </tr>
-  <tr>
-    <td rowspan='1'>This interface manages the structure of the response of the POST request to `/user` creating a user.</td>
-    <td>None</td>
-  </tr>
-</table>
+#### UserLinkJoin
 
-<table>
-  <tr>
-    <td colspan='2'><b>Interface: ListUserBodyResponse</b></td>
-  </tr>
-  <tr colspan='2'><b>States: users</b></tr>
-  <tr>
-    <td><b>Responsibilities:</b></td>
-    <td><b>Collaborators:</b></td>
-  </tr>
-  <tr>
-    <td rowspan='1'>This interface manages the structure of the response of the GET request to `/user` listing all users.</td>
-    <td>None</td>
-  </tr>
-</table>
+This page has similar layout and functionalities with the UserCreation, but it has a invitation token passed from the props that relates to a specific town, which was extracted from the address. Before first rendering, this component would request the Town REST service for the `townID` and `friendlyName` of the related town. After typing in a valid user name in the text input box and click the "Create" button, this component would firstly send a request to Invitation REST service to create a user and then immediately request Town REST service to join the town.
 
-<table>
-  <tr>
-    <td colspan='2'><b>Interface: GetInvitationIDBodyRequest</b></td>
-  </tr>
-  <tr colspan='2'><b>States: users</b></tr>
-  <tr>
-    <td><b>Responsibilities:</b></td>
-    <td><b>Collaborators:</b></td>
-  </tr>
-  <tr>
-    <td rowspan='1'>This interface manages the structure of the request of the GET request to `/invitation` requesting for invitation token from backend.</td>
-    <td>ServiceClient</td>
-  </tr>
-</table>
+#### TownInvitation
 
-<table>
-  <tr>
-    <td colspan='2'><b>Interface: InviteUserInSystemBodyRequest</b></td>
-  </tr>
-  <tr colspan='2'><b>States: coveyTownID, invitedUserID</b></tr>
-  <tr>
-    <td><b>Responsibilities:</b></td>
-    <td><b>Collaborators:</b></td>
-  </tr>
-  <tr>
-    <td rowspan='1'>This interface manages the structure of the request of the POST request to `/invitation` to invite a user.</td>
-    <td>None</td>
-  </tr>
-</table>
+This component is placed as a button besides the TownSettings button at the bottom of the page in a town. Before first rendering, this component would request the Town REST service for the token of joining the current town. Upon clicking, it would pop up a window showing the invitation URL and a "Copy" button that would copy the invitation URL to user's clipboard. The window would also have a list of all available users requested from the backend, each entry consisting of their name, userID, and a "Invite" button that would send a request to backend to invite the corresponding user. This list would be refreshed every 2 seconds.
 
-<table>
-  <tr>
-    <td colspan='2'><b>Interface: JoinInvitationBodyRequest</b></td>
-  </tr>
-  <tr colspan='2'><b>States: invitationID</b></tr>
-  <tr>
-    <td><b>Responsibilities:</b></td>
-    <td><b>Collaborators:</b></td>
-  </tr>
-  <tr>
-    <td rowspan='1'>This interface manages the structure of the request of the GET request to `/invitation` requesting for information about a specific town.</td>
-    <td>ServiceClient</td>
-  </tr>
-</table>
+### Reducer related
 
-<table>
-  <tr>
-    <td colspan='2'><b>Interface: JoinInvitationBodyResponse</b></td>
-  </tr>
-  <tr colspan='2'><b>States: coveyTownID, friendlyName</b></tr>
-  <tr>
-    <td><b>Responsibilities:</b></td>
-    <td><b>Collaborators:</b></td>
-  </tr>
-  <tr>
-    <td rowspan='1'>This interface manages the structure of the response of the GET request to `/invitation` requesting for information about a specific town.</td>
-    <td>ServiceClient</td>
-  </tr>
-</table>
+##### Func: loginController
 
-<table>
-  <tr>
-    <td colspan='2'><b>Function: GoToTownListButton</b></td>
-  </tr>
-  <tr>
-    <td><b>Responsibilities:</b></td>
-    <td><b>Collaborators:</b></td>
-  </tr>
-  <tr>
-    <td rowspan='3'>This component is a button that would exit current town and back to the TownSelection page upon clicking. This component should be disabled when `IVideoContext.room` is not connected since user would then either have already been on the TownSelection page or have not entered a username.</td>
-    <td>IVideoContext.room</td>
-  </tr>
-  <tr><td>useRoomState</td></tr>
-  <tr><td>UserInvitation</td></tr>
-</table>
+Set up a socket capturing `/user` and listening for `'invitedToTown'` from backend and update CoveyAppStates according to arguments. This function has similar functionality with GameController and should also be used similarly but with different arguments.
 
-<table>
-  <tr>
-    <td colspan='2'><b>Function: LogoutButton</b></td>
-  </tr>
-  <tr>
-    <td><b>Responsibilities:</b></td>
-    <td><b>Collaborators:</b></td>
-  </tr>
-  <tr>
-    <td rowspan='4'>This component is a button that would diconnect all connections, clear all states back to default, and back to the TownSelection page upon clicking. This component should be disabled exactly when `IVideoContext.room` is trying to, but have not yet, connect to twilio.</td>
-    <td>IVideoContext.room</td>
-  </tr>
-  <tr><td>CoveyAppState.sessionToken</td></tr>
-  <tr><td>useRoomState</td></tr>
-  <tr><td>UserInvitation</td></tr>
-</table>
+### Service related
 
-<table>
-  <tr>
-    <td colspan='2'><b>Function: TownInvitation</b></td>
-  </tr>
-  <tr colspan='2'><b>States: availableUsers, invitationToken</b></tr>
-  <tr>
-    <td><b>Responsibilities:</b></td>
-    <td><b>Collaborators:</b></td>
-  </tr>
-  <tr>
-    <td rowspan='4'>This component is places as a button besides the TownSettings button at the bottom of the page in a town. Upon clicking, it would pop up a window showing the invitation URL and a "Copy" button that would copy the invitation URL to user's clipboard. The window would also have a list of all available users requested from the backend, each entry consisting of their name, userID, and a "Invite" button that would send a request to backend to invite the corresponding user.</td>
-    <td>Video</td>
-  </tr>
-  <tr><td>CoveyAppState.myUserID</td></tr>
-  <tr><td>CoveyAppState.currentTownID</td></tr>
-  <tr><td>CoveyAppState.apiClient</td></tr>
-</table>
+#### ServiceClient
 
-<table>
-  <tr>
-    <td colspan='2'><b>Type: CoveyAppStates</b></td>
-  </tr>
-  <tr colspan='2'><b>States: sessionToken, userName, myUserID, myUserToken, currentTownFriendlyName, currentTownID, currentTownIsPubliclyListed, myPlayerID, players, currentLocation, nearbyPlayers, emitMovement, townSocket, invitationSocket, invitations, apiClient</b></tr>
-  <tr>
-    <td><b>Responsibilities:</b></td>
-    <td><b>Collaborators:</b></td>
-  </tr>
-  <tr>
-    <td rowspan='5'>This type manages the structure of all shared states in the frontend of Covey.Town.</td>
-    <td>App</td>
-  </tr>
-  <tr><td>UserCreation</td></tr>
-  <tr><td>TownLink</td></tr>
-  <tr><td>UserLinkJoin</td></tr>
-  <tr><td>TownInvitation</td></tr>
-</table>
+Construct a Service API client. Specify a serviceURL for testing, or otherwise defaults to the URL at the environmental variable REACT_APP_ROOMS_SERVICE_URL. Deal with all communications to the backend through REST API. This class was originally "TownsServiceClient".
